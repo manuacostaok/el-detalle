@@ -59,7 +59,9 @@ export function GiftCard({
             className="rounded-[10px] py-2.5 px-0.5 text-center"
             style={{ background: style.counterBg, border: style.counterBorder }}
           >
-            <b className="block font-mono text-[19px]">{cell.value}</b>
+            <b className="block font-mono text-[19px]" suppressHydrationWarning={cell.label === "Segundos"}>
+              {cell.value}
+            </b>
             <span className="text-[9.5px] uppercase tracking-[0.05em] opacity-70">
               {cell.label}
             </span>

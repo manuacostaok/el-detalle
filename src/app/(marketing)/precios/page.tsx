@@ -71,6 +71,8 @@ export default function PreciosPage() {
                 <li>✓ Todo lo del plan Básico</li>
                 <li>✓ Los 5 temas, incluidos Nocturno y Divertido</li>
                 <li>✓ Una foto y una canción</li>
+                <li>✓ Su propia constelación + estadísticas de la relación</li>
+                <li>✓ Cápsula del tiempo: una carta que se abre en el futuro</li>
                 <li>✓ Sin marca de agua</li>
               </ul>
               <Button href="/crear?plan=premium" variant="gold" block>

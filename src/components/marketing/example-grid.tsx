@@ -66,6 +66,10 @@ const EXAMPLES: GiftPagePayload[] = [
     photo: "",
     theme: "nocturno",
     plan: "premium",
+    futureLetter: {
+      unlockDate: "2027-09-27",
+      message: "Si estás leyendo esto, llegamos a los doce. Gracias por seguir eligiéndome.",
+    },
   },
   {
     occasion: "pareja",

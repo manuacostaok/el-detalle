@@ -162,3 +162,8 @@ p {
 .animate-float-up {
   animation: float-up linear infinite;
 }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}

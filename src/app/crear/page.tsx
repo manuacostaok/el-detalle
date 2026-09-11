@@ -27,6 +27,22 @@ type Draft = {
   photo: string;
   theme: ThemeKey;
   plan: PlanKey;
+  futureLetterDate: string;
+  futureLetterMessage: string;
+};
+
+const EMPTY_DRAFT: Omit<Draft, "plan"> = {
+  occasion: "pareja",
+  from: "",
+  to: "",
+  date: "",
+  title: "",
+  message: "",
+  song: "",
+  photo: "",
+  theme: "romantico",
+  futureLetterDate: "",
+  futureLetterMessage: "",
 };
 
 function CreateWizardInner() {
@@ -34,18 +50,7 @@ function CreateWizardInner() {
   const user = useSession();
   const initialPlan = searchParams.get("plan") === "premium" ? "premium" : "free";
 
-  const [draft, setDraft] = useState<Draft>({
-    occasion: "pareja",
-    from: "",
-    to: "",
-    date: "",
-    title: "",
-    message: "",
-    song: "",
-    photo: "",
-    theme: "romantico",
-    plan: initialPlan,
-  });
+  const [draft, setDraft] = useState<Draft>({ ...EMPTY_DRAFT, plan: initialPlan });
   const [wizStep, setWizStep] = useState(0);
   const [photoStatus, setPhotoStatus] = useState<string | null>(null);
   const [published, setPublished] = useState<{ link: string; b64Length: number; saved: boolean } | null>(null);
@@ -73,6 +78,8 @@ function CreateWizardInner() {
   }
 
   function publish() {
+    const hasFutureLetter =
+      draft.plan === "premium" && draft.futureLetterDate.trim() && draft.futureLetterMessage.trim();
     const payload: GiftPagePayload = {
       occasion: draft.occasion,
       from: draft.from || "Alguien",
@@ -84,6 +91,9 @@ function CreateWizardInner() {
       photo: PLAN_FEATURES[draft.plan].photo ? draft.photo : "",
       theme: draft.theme,
       plan: draft.plan,
+      futureLetter: hasFutureLetter
+        ? { unlockDate: draft.futureLetterDate, message: draft.futureLetterMessage }
+        : undefined,
     };
     const b64 = encodePayload(payload);
     const link = `${window.location.origin}/r/${b64}`;
@@ -98,18 +108,7 @@ function CreateWizardInner() {
   function reset() {
     setPublished(null);
     setWizStep(0);
-    setDraft({
-      occasion: "pareja",
-      from: "",
-      to: "",
-      date: "",
-      title: "",
-      message: "",
-      song: "",
-      photo: "",
-      theme: "romantico",
-      plan: "free",
-    });
+    setDraft({ ...EMPTY_DRAFT, plan: "free" });
   }
 
   if (published) {
@@ -119,10 +118,16 @@ function CreateWizardInner() {
   const key = WIZ_STEPS[wizStep];
   const occasion = getOccasion(draft.occasion);
   const previewPayload: GiftPagePayload = {
-    ...draft,
+    occasion: draft.occasion,
     from: draft.from || "Alguien",
     to: draft.to || "vos",
     date: draft.date || new Date().toISOString().slice(0, 10),
+    title: draft.title,
+    message: draft.message,
+    song: draft.song,
+    photo: draft.photo,
+    theme: draft.theme,
+    plan: draft.plan,
   };
 
   return (
@@ -238,7 +243,7 @@ function CreateWizardInner() {
                 active={draft.plan === "premium"}
                 title="Premium ✦"
                 price={`${PLAN_PRICING.premium.ars} ARS · ≈${PLAN_PRICING.premium.usd} (demo)`}
-                features={["Los 5 temas", "Foto + canción", "Sin marca de agua"]}
+                features={["Los 5 temas", "Foto + canción", "Constelación + estadísticas", "Cápsula del tiempo", "Sin marca de agua"]}
                 onSelect={() => update("plan", "premium")}
                 variant="gold"
               />
@@ -294,6 +299,33 @@ function CreateWizardInner() {
                 algunos celulares — si pasa, compartí el link directo por WhatsApp en vez del QR.
               </p>
             )}
+
+            {draft.plan === "premium" && (
+              <div className="mt-7 border-t border-line pt-6">
+                <h3 className="text-[16px] text-text">✦ Cápsula del tiempo</h3>
+                <p className="mt-1.5 text-[13px] text-text-soft">
+                  Una carta extra que queda guardada y solo se puede abrir a partir de una fecha
+                  futura — para el próximo aniversario, un cumpleaños, o cuando quieras.
+                  Opcional.
+                </p>
+                <Field label="Se puede abrir a partir de">
+                  <Input
+                    type="date"
+                    value={draft.futureLetterDate}
+                    onChange={(e) => update("futureLetterDate", e.target.value)}
+                  />
+                </Field>
+                <Field label="Carta guardada">
+                  <textarea
+                    value={draft.futureLetterMessage}
+                    onChange={(e) => update("futureLetterMessage", e.target.value)}
+                    placeholder="Para cuando leas esto, espero que sigamos eligiéndonos..."
+                    className="w-full min-h-[90px] bg-ground border border-line-strong text-text rounded-[11px] px-3.5 py-3 text-[14.5px] leading-[1.6] outline-none transition-colors focus:border-accent resize-y"
+                  />
+                </Field>
+              </div>
+            )}
+
             <Nav onBack={prev} onNext={next} />
           </>
         )}

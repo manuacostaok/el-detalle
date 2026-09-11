@@ -147,6 +147,8 @@ export type GiftPagePayload = {
   photo: string;
   theme: ThemeKey;
   plan: PlanKey;
+  /** Cápsula del tiempo — Premium: un mensaje extra que se revela recién en `unlockDate`. */
+  futureLetter?: { unlockDate: string; message: string };
 };
 
 export function timeSince(dateStr: string) {

@@ -9,7 +9,7 @@ const PARTICLES = Array.from({ length: 10 }, (_, i) => ({
 
 export function FloatEmoji({ emoji }: { emoji: string }) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none motion-reduce:hidden">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none motion-reduce:hidden">
       {PARTICLES.map((p, i) => (
         <span
           key={i}
