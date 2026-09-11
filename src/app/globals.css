@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
+/* ============================================================
+   SOULMATES — design tokens
+   Ver DESIGN.md §3. Extiende (no reemplaza) la paleta original.
+============================================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* superficies */
+  --color-ground: #1b1220;
+  --color-surface: #241a2e;
+  --color-surface-2: #2e2138;
+  --color-surface-3: #382a44;
+  --color-paper: #f7efe6;
+  --color-paper-2: #fbf6ef;
+
+  /* texto */
+  --color-ink: #1e1420;
+  --color-ink-soft: #6b5763;
+  --color-text: #f3e9e4;
+  --color-text-soft: #c7b7be;
+  --color-text-faint: #8b7c87;
+
+  /* acentos de marca */
+  --color-accent: #c4425b;
+  --color-accent-strong: #e15571;
+  --color-accent-soft: #f2a6b4;
+  --color-gold: #c9a24b;
+  --color-gold-soft: #e7cd8e;
+
+  /* semánticos (nuevos, para app/admin) */
+  --color-success: #6ea380;
+  --color-error: #d9614f;
+  --color-focus: #e7cd8e;
+
+  /* líneas */
+  --color-line: rgba(247, 239, 230, 0.14);
+  --color-line-strong: rgba(247, 239, 230, 0.24);
+  --color-line-on-paper: rgba(30, 20, 32, 0.12);
+
+  --shadow-card: 0 20px 50px -20px rgba(0, 0, 0, 0.55);
+  --shadow-lift: 0 30px 70px -25px rgba(0, 0, 0, 0.5);
+  --radius-card: 18px;
+  --radius-lg: 24px;
+
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-body: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ground: var(--color-ground);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-surface-3: var(--color-surface-3);
+  --color-paper: var(--color-paper);
+  --color-paper-2: var(--color-paper-2);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-text: var(--color-text);
+  --color-text-soft: var(--color-text-soft);
+  --color-text-faint: var(--color-text-faint);
+  --color-accent: var(--color-accent);
+  --color-accent-strong: var(--color-accent-strong);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-gold: var(--color-gold);
+  --color-gold-soft: var(--color-gold-soft);
+  --color-success: var(--color-success);
+  --color-error: var(--color-error);
+  --color-focus: var(--color-focus);
+  --color-line: var(--color-line);
+  --color-line-strong: var(--color-line-strong);
+  --color-line-on-paper: var(--color-line-on-paper);
+
+  --font-serif: var(--font-serif);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
+  --radius-card: var(--radius-card);
+  --radius-lg: var(--radius-lg);
+
+  --breakpoint-xs: 420px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ground);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  text-wrap: balance;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  22% { transform: scale(1.14); }
+  38% { transform: scale(0.97); }
+  55% { transform: scale(1.08); }
+  72% { transform: scale(1); }
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-heartbeat {
+    animation: none;
+  }
 }

@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soulmates</title>
+<meta name="description" content="Creá una página de regalo con contador en vivo, mensaje y QR — para pareja, amigos, familia o mascota. Sin apps, sin cuentas.">
+<meta name="theme-color" content="#1B1220">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/favicon-180.png">
+<meta property="og:title" content="Soulmates">
+<meta property="og:description" content="Una página con su historia, lista para regalar — con QR incluido.">
+<meta property="og:type" content="website">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --ground:#1B1220;
+    --surface:#241A2E;
+    --surface-2:#2E2138;
+    --paper:#F7EFE6;
+    --paper-2:#FBF6EF;
+    --ink:#1E1420;
+    --ink-soft:#6B5763;
+    --text:#F3E9E4;
+    --text-soft:#C7B7BE;
+    --text-faint:#8B7C87;
+    --accent:#C4425B;
+    --accent-strong:#E15571;
+    --gold:#C9A24B;
+    --gold-soft:#E7CD8E;
+    --line:rgba(247,239,230,0.14);
+    --line-strong:rgba(247,239,230,0.24);
+    --shadow:0 20px 50px -20px rgba(0,0,0,0.55);
+    --radius:18px;
+    --serif:'Fraunces', ui-serif, Georgia, serif;
+    --sans:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    --mono:'IBM Plex Mono', ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--ground);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  img{display:block;}
+  button{font-family:inherit;cursor:pointer;}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0;}
+  p{margin:0;}
+  input,textarea,select{font-family:inherit;}
+  ::selection{background:var(--accent);color:#fff;}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold-soft);font-weight:600;
+  }
+
+  /* ---------- top nav ---------- */
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 0;
+  }
+  .brand{
+    display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:21px;font-weight:600;color:var(--text);
+  }
+  .brand-mark{width:25px;height:25px;display:flex;flex-shrink:0;}
+  .brand-mark svg{width:100%;height:100%;display:block;}
+
+  @keyframes heartbeat{
+    0%,100%{transform:scale(1);}
+    22%{transform:scale(1.14);}
+    38%{transform:scale(.97);}
+    55%{transform:scale(1.08);}
+    72%{transform:scale(1);}
+  }
+  .beat{animation:heartbeat 1s ease-in-out infinite;transform-origin:center;}
+  .beat-mini{display:inline-flex;width:14px;height:14px;vertical-align:-2px;margin-right:6px;}
+  .beat-mini svg{width:100%;height:100%;animation:heartbeat .85s ease-in-out infinite;}
+  @media (prefers-reduced-motion: reduce){
+    .beat, .beat-mini svg{animation:none;}
+  }
+  .nav-links{display:flex;gap:28px;align-items:center;font-size:14px;color:var(--text-soft);}
+  .nav-links a{text-decoration:none;transition:color .15s;}
+  .nav-links a:hover{color:var(--text);}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:13px 24px;border-radius:999px;border:1px solid transparent;
+    font-size:14.5px;font-weight:600;text-decoration:none;transition:transform .15s, background .15s, border-color .15s, opacity .15s;
+    white-space:nowrap;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-strong);}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line-strong);}
+  .btn-ghost:hover{border-color:var(--text-soft);}
+  .btn-gold{background:var(--gold);color:#241A2E;}
+  .btn-gold:hover{background:var(--gold-soft);}
+  .btn-sm{padding:9px 16px;font-size:13px;}
+  .btn-block{width:100%;}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;}
+  .btn-icon{padding:9px 12px;}
+  .link-btn{background:none;border:none;color:var(--text-soft);text-decoration:underline;text-underline-offset:3px;font-size:14px;padding:4px 0;}
+  .link-btn:hover{color:var(--text);}
+
+  /* ---------- hero ---------- */
+  .hero{padding:56px 0 84px;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
+  .hero h1{font-size:clamp(34px,5vw,54px);letter-spacing:-.01em;}
+  .hero h1 em{font-style:italic;font-weight:500;color:var(--gold-soft);}
+  .hero-sub{margin-top:18px;font-size:17px;color:var(--text-soft);max-width:46ch;}
+  .hero-cta{margin-top:30px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .hero-note{margin-top:14px;font-size:13px;color:var(--text-faint);font-family:var(--mono);}
+
+  .hero-card{
+    position:relative;background:var(--paper);border-radius:24px;padding:30px;
+    box-shadow:var(--shadow);transform:rotate(2deg);
+    border:1px solid rgba(255,255,255,0.6);
+  }
+  .hero-card::before{
+    content:'';position:absolute;inset:10px;border:1px dashed rgba(30,20,32,0.18);border-radius:16px;pointer-events:none;
+  }
+  .hero-card-badge{
+    display:inline-flex;align-items:center;gap:6px;background:var(--ink);color:var(--paper);
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:6px 12px;border-radius:999px;
+  }
+  .hero-card h3{color:var(--ink);font-size:24px;margin-top:16px;}
+  .hero-card p.msg{color:var(--ink-soft);font-size:14px;margin-top:8px;line-height:1.55;}
+  .hero-counter{
+    margin-top:18px;display:flex;gap:10px;
+  }
+  .hero-counter .c{
+    flex:1;background:var(--paper-2);border-radius:12px;padding:10px 6px;text-align:center;
+  }
+  .hero-counter .c b{display:block;font-family:var(--mono);font-size:20px;color:var(--accent);}
+  .hero-counter .c span{font-size:10px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;}
+  .hero-qr{
+    position:absolute;bottom:-22px;right:-14px;background:#fff;padding:10px;border-radius:14px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+  }
+  .hero-qr svg{display:block;}
+  .hero-qr span{font-family:var(--mono);font-size:9px;color:var(--ink-soft);}
+
+  /* ---------- section shell ---------- */
+  section{padding:78px 0;border-top:1px solid var(--line);}
+  .section-head{max-width:640px;margin-bottom:44px;}
+  .section-head h2{font-size:clamp(26px,3.4vw,36px);margin-top:10px;}
+  .section-head p{margin-top:14px;color:var(--text-soft);font-size:15.5px;}
+
+  /* ---------- steps ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .step-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;}
+  .step-num{font-family:var(--mono);color:var(--gold-soft);font-size:13px;}
+  .step-card h3{font-size:19px;margin-top:14px;}
+  .step-card p{margin-top:10px;color:var(--text-soft);font-size:14px;}
+
+  /* ---------- occasions / gallery ---------- */
+  .occ-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+  .occ-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 14px;text-align:center;
+    transition:border-color .15s, transform .15s;cursor:default;
+  }
+  .occ-card .e{font-size:26px;}
+  .occ-card h4{font-family:var(--sans);font-weight:600;font-size:13.5px;margin-top:10px;color:var(--text);}
+  .occ-card p{font-size:12px;color:var(--text-faint);margin-top:4px;}
+
+  .theme-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:36px;}
+  .theme-preview{
+    border-radius:14px;overflow:hidden;border:1px solid var(--line);height:120px;position:relative;
+  }
+  .theme-preview .bar{position:absolute;bottom:0;left:0;right:0;padding:8px 10px;font-family:var(--mono);font-size:10.5px;background:rgba(0,0,0,0.35);color:#fff;backdrop-filter:blur(2px);}
+
+  /* ---------- comparison ---------- */
+  table.compare{width:100%;border-collapse:collapse;font-size:14.5px;}
+  table.compare th, table.compare td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);}
+  table.compare th{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-faint);font-weight:600;}
+  table.compare td.us{color:var(--text);font-weight:600;}
+  table.compare td.them{color:var(--text-faint);}
+  table.compare tr td:first-child{color:var(--text-soft);}
+  .yes{color:var(--gold-soft);}
+
+  /* ---------- pricing ---------- */
+  .pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .price-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:18px;}
+  .price-card.premium{border-color:var(--gold);background:linear-gradient(180deg, var(--surface-2), var(--surface));position:relative;}
+  .price-card.premium::before{
+    content:'Más elegido';position:absolute;top:-12px;right:24px;background:var(--gold);color:#241A2E;
+    font-family:var(--mono);font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:999px;
+  }
+  .price-card h3{font-size:20px;}
+  .price-amount{font-family:var(--mono);font-size:38px;color:var(--text);}
+  .price-amount span{font-size:14px;color:var(--text-faint);}
+  .price-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;font-size:14px;color:var(--text-soft);}
+  .price-list li{display:flex;gap:9px;align-items:flex-start;}
+  .price-note{font-size:12.5px;color:var(--text-faint);font-family:var(--mono);}
+
+  /* ---------- footer ---------- */
+  footer{padding:40px 0 60px;color:var(--text-faint);font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+
+  /* ================= WIZARD ================= */
+  .wiz-shell{max-width:760px;margin:0 auto;padding:40px 28px 100px;}
+  .wiz-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;}
+  .wiz-progress{display:flex;gap:6px;flex:1;margin:0 24px;}
+  .wiz-progress i{flex:1;height:3px;border-radius:3px;background:var(--line-strong);}
+  .wiz-progress i.done{background:var(--accent);}
+  .wiz-step-label{font-family:var(--mono);font-size:11.5px;color:var(--text-faint);text-align:center;margin-bottom:8px;}
+
+  .wiz-panel{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:38px;}
+  .wiz-panel h2{font-size:25px;}
+  .wiz-panel > p.hint{color:var(--text-soft);font-size:14px;margin-top:8px;}
+
+  .field{margin-top:22px;}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-soft);margin-bottom:8px;letter-spacing:.02em;}
+  .field input[type=text], .field input[type=date], .field input[type=url], .field textarea{
+    width:100%;background:var(--ground);border:1px solid var(--line-strong);color:var(--text);
+    border-radius:11px;padding:12px 14px;font-size:14.5px;outline:none;transition:border-color .15s;
+  }
+  .field input:focus, .field textarea:focus{border-color:var(--accent);}
+  .field textarea{resize:vertical;min-height:110px;line-height:1.6;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .field-count{font-size:11.5px;color:var(--text-faint);margin-top:6px;text-align:right;font-family:var(--mono);}
+
+  .pick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px;}
+  .pick-grid.cols-5{grid-template-columns:repeat(5,1fr);}
+  .pick{
+    background:var(--ground);border:1.5px solid var(--line-strong);border-radius:14px;padding:16px 10px;text-align:center;
+    transition:border-color .15s, background .15s;
+  }
+  .pick .e{font-size:24px;display:block;}
+  .pick .l{display:block;font-size:12.5px;margin-top:8px;font-weight:600;}
+  .pick.active{border-color:var(--accent);background:rgba(196,66,91,0.12);}
+
+  .theme-pick{padding:0;overflow:hidden;border-radius:14px;}
+  .theme-pick .sw{height:64px;display:flex;}
+  .theme-pick .sw i{flex:1;}
+  .theme-pick .l{display:block;padding:10px 8px;font-size:12px;}
+  .theme-pick.active{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+  .plan-pick{
+    text-align:left;background:var(--ground);border:1.5px solid var(--line-strong);border-radius:16px;padding:20px;
+  }
+  .plan-pick.active{border-color:var(--gold);background:rgba(201,162,75,0.1);}
+  .plan-pick h4{font-size:16px;}
+  .plan-pick .amt{font-family:var(--mono);color:var(--text-soft);font-size:13px;margin-top:4px;}
+  .plan-pick ul{list-style:none;padding:0;margin:12px 0 0;font-size:12.5px;color:var(--text-soft);display:flex;flex-direction:column;gap:6px;}
+
+  .wiz-nav{display:flex;justify-content:space-between;margin-top:32px;}
+
+  .song-chip{
+    display:inline-flex;align-items:center;gap:8px;background:var(--ground);border:1px solid var(--line-strong);
+    border-radius:999px;padding:9px 16px;font-size:13px;margin-top:8px;
+  }
+
+  /* ============ SHARE / RESULT SCREEN ============ */
+  .share-shell{max-width:520px;margin:60px auto 100px;padding:0 28px;text-align:center;}
+  .share-shell h2{font-size:26px;margin-top:18px;}
+  .share-shell p.hint{color:var(--text-soft);margin-top:8px;font-size:14.5px;}
+  .qr-box{background:#fff;padding:18px;border-radius:18px;display:inline-block;margin:28px auto 8px;box-shadow:var(--shadow);}
+  .link-row{
+    display:flex;gap:8px;margin-top:22px;background:var(--surface);border:1px solid var(--line-strong);
+    border-radius:12px;padding:6px 6px 6px 16px;align-items:center;
+  }
+  .link-row input{flex:1;background:transparent;border:none;color:var(--text-soft);font-family:var(--mono);font-size:12.5px;outline:none;}
+  .share-actions{display:flex;gap:12px;justify-content:center;margin-top:20px;flex-wrap:wrap;}
+  .qr-warn{margin-top:14px;font-size:12.5px;color:var(--gold-soft);background:rgba(201,162,75,0.1);border:1px solid rgba(201,162,75,0.3);padding:10px 14px;border-radius:10px;}
+
+  /* ================= GIFT VIEWER (per-theme, single visual world) ================= */
+  .gift-outer{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:48px 20px;position:relative;overflow:hidden;}
+  .float-emoji{position:absolute;bottom:-40px;font-size:22px;opacity:0;animation:floatUp linear infinite;pointer-events:none;}
+  @keyframes floatUp{
+    0%{opacity:0;transform:translateY(0) rotate(0deg);}
+    10%{opacity:.85;}
+    90%{opacity:.5;}
+    100%{opacity:0;transform:translateY(-115vh) rotate(25deg);}
+  }
+  .reveal-overlay{
+    position:fixed;inset:0;z-index:80;background:var(--ground);
+    display:flex;align-items:center;justify-content:center;
+    transition:opacity .45s ease;
+  }
+  .reveal-overlay.hide{opacity:0;pointer-events:none;}
+  .reveal-heart{position:relative;width:120px;height:120px;animation:heartbeat .5s ease-in-out 1;}
+  .reveal-heart svg{position:absolute;inset:0;width:100%;height:100%;}
+  .reveal-heart .half{position:absolute;inset:0;display:block;transition:transform .65s cubic-bezier(.6,0,.4,1), opacity .55s ease .1s;}
+  .reveal-heart.opening{animation:none;}
+  .reveal-heart.opening .half-left{transform:translateX(-130px) rotate(-10deg);opacity:0;}
+  .reveal-heart.opening .half-right{transform:translateX(130px) rotate(10deg);opacity:0;}
+  @media (prefers-reduced-motion: reduce){
+    .reveal-heart{animation:none;}
+    .reveal-heart .half{transition:none;}
+  }
+
+  .gift-card{
+    max-width:460px;width:100%;border-radius:26px;padding:40px 32px;position:relative;z-index:1;
+    box-shadow:0 30px 70px -25px rgba(0,0,0,0.5);
+  }
+  .gift-eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.65;}
+  .gift-card h1{font-family:var(--serif);font-size:30px;margin-top:14px;line-height:1.15;}
+  .gift-since{margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .gift-since .c{text-align:center;padding:10px 2px;border-radius:10px;}
+  .gift-since .c b{display:block;font-family:var(--mono);font-size:19px;}
+  .gift-since .c span{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;opacity:.7;}
+  .envelope{
+    margin-top:24px;border:1.5px dashed currentColor;border-radius:14px;padding:18px;text-align:center;opacity:.85;
+  }
+  .envelope button{background:none;border:none;font:inherit;color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px;}
+  .gift-message{margin-top:16px;font-size:15px;line-height:1.7;white-space:pre-wrap;}
+  .gift-photo{margin-top:20px;border-radius:14px;overflow:hidden;}
+  .gift-photo img{width:100%;height:220px;object-fit:cover;}
+  .gift-song{margin-top:20px;}
+  .gift-foot{margin-top:26px;display:flex;justify-content:space-between;align-items:center;font-size:11px;opacity:.6;}
+  .gift-foot a{text-decoration:none;font-weight:600;}
+  .gift-notfound{color:var(--text);text-align:center;padding:80px 20px;}
+
+  /* per-theme palettes */
+  .t-romantico{background:#FFF1F3;color:#3A1620;}
+  .t-romantico .gift-since .c{background:#FFE1E6;}
+  .t-romantico a, .t-romantico button{color:#C4425B;}
+  .t-romantico .gift-eyebrow{color:#C4425B;}
+
+  .t-nocturno{background:#10111A;color:#F1EDE3;}
+  .t-nocturno .gift-since .c{background:#1E2130;}
+  .t-nocturno a, .t-nocturno button{color:#D4AF6A;}
+  .t-nocturno .gift-eyebrow{color:#D4AF6A;}
+
+  .t-boho{background:#F4E9D8;color:#3B2A1D;}
+  .t-boho .gift-since .c{background:#EBD9BC;}
+  .t-boho a, .t-boho button{color:#C9713A;}
+  .t-boho .gift-eyebrow{color:#8A6B33;}
+
+  .t-divertido{background:linear-gradient(160deg,#FFF4E0,#FFE3EE);color:#2B2438;}
+  .t-divertido .gift-since .c{background:#ffffffa8;}
+  .t-divertido a, .t-divertido button{color:#FF6B4A;}
+  .t-divertido .gift-eyebrow{color:#6A5ACD;}
+  .t-divertido{border-radius:30px;}
+
+  .t-minimal{background:#FAFAF8;color:#1B1220;border:1px solid #1B1220;}
+  .t-minimal .gift-since .c{background:#F0F0EC;border:1px solid #1B1220;}
+  .t-minimal a, .t-minimal button{color:#1B1220;}
+  .t-minimal .gift-eyebrow{color:#8A8A85;}
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 880px){
+    .hero{grid-template-columns:1fr;gap:44px;}
+    .hero-card{transform:none;order:-1;max-width:400px;margin:0 auto;}
+    .steps{grid-template-columns:1fr;}
+    .occ-grid{grid-template-columns:repeat(3,1fr);}
+    .theme-strip{grid-template-columns:repeat(2,1fr);}
+    .pricing-grid{grid-template-columns:1fr;}
+    .pick-grid{grid-template-columns:repeat(2,1fr);}
+    .pick-grid.cols-5{grid-template-columns:repeat(3,1fr);}
+    .plan-grid{grid-template-columns:1fr;}
+    .field-row{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    table.compare{font-size:13px;}
+    .wiz-panel{padding:26px 20px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* ============================================================
+     DATA
+  ============================================================ */
+  var OCCASIONS = [
+    {key:'pareja',    e:'💞', label:'Pareja',      counter:'Juntos hace',        ph:'Desde que te conocí, cada día tiene algo mejor. Esta es nuestra historia, para volver a leerla cuando quieras.'},
+    {key:'amistad',   e:'✨', label:'Amistad',     counter:'Amigos hace',        ph:'De todas las personas que pude cruzarme, me alegra que hayas sido vos. Gracias por tantos años de código compartido.'},
+    {key:'familia',   e:'🏡', label:'Familia',     counter:'Familia hace',       ph:'Esta familia empezó hace un tiempo y no para de crecer. Este es un lugarcito para recordarlo siempre.'},
+    {key:'mascota',   e:'🐾', label:'Mascota',     counter:'Con nosotros hace',  ph:'Llegaste a esta casa y la cambiaste para siempre. Esta página es para vos, aunque no sepas leer.'},
+    {key:'aniversario', e:'🎉', label:'Aniversario', counter:'Celebrando hace',   ph:'Hoy cumplimos otro año de historia juntos. Gracias por ser parte de algo que vale la pena festejar.'}
+  ];
+
+  var THEMES = [
+    {key:'romantico', label:'Romántico',  sw:['#FFE1E6','#FFF1F3','#C4425B'], premium:false},
+    {key:'boho',      label:'Boho cálido',sw:['#F4E9D8','#EBD9BC','#C9713A'], premium:false},
+    {key:'minimal',   label:'Minimal',    sw:['#FAFAF8','#F0F0EC','#1B1220'], premium:false},
+    {key:'nocturno',  label:'Nocturno',   sw:['#10111A','#1E2130','#D4AF6A'], premium:true},
+    {key:'divertido', label:'Divertido',  sw:['#FFF4E0','#FFE3EE','#FF6B4A'], premium:true}
+  ];
+
+  var PLAN_FEATURES = {
+    free:    {photo:false, song:false, watermark:true,  label:'Básico'},
+    premium: {photo:true,  song:true,  watermark:false, label:'Premium'}
+  };
+
+  /* ============================================================
+     STATE
+  ============================================================ */
+  var draft = {
+    occasion:'pareja', from:'', to:'', date:'', title:'', message:'',
+    song:'', photo:'', theme:'romantico', plan:'free'
+  };
+  var wizStep = 0;
+  var WIZ_STEPS = ['ocasion','protagonistas','mensaje','plan','extras','tema','listo'];
+  var publishedLink = '';
+  var downloadsApi = null;
+  var counterTimer = null;
+
+  if (typeof window.claude !== 'undefined' && window.claude.use) {
+    window.claude.use('downloads').then(function(api){ downloadsApi = api; })['catch'](function(){});
+  }
+
+  /* ============================================================
+     HELPERS
+  ============================================================ */
+  /* Two matching halves that make one heart — the Soulmates mark. */
+  var HEART_LEFT_D  = 'M50 88 C50 88 10 60 10 34 C10 18 22 8 36 8 C44 8 50 14 50 14 L43 24 L54 34 L41 46 L55 58 L44 70 L50 88 Z';
+  var HEART_RIGHT_D = 'M50 14 C50 14 56 8 64 8 C78 8 90 18 90 34 C90 60 50 88 50 88 L44 70 L55 58 L41 46 L54 34 L43 24 L50 14 Z';
+
+  function heartHalfSVG(side, fill){
+    var d = side === 'left' ? HEART_LEFT_D : HEART_RIGHT_D;
+    return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="'+d+'" fill="'+fill+'"></path></svg>';
+  }
+
+  function heartMark(leftFill, rightFill){
+    leftFill = leftFill || '#C4425B'; rightFill = rightFill || '#C9A24B';
+    return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="'+HEART_LEFT_D+'" fill="'+leftFill+'"></path>' +
+      '<path d="'+HEART_RIGHT_D+'" fill="'+rightFill+'"></path>' +
+    '</svg>';
+  }
+
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
+  function toB64(obj){
+    var json = JSON.stringify(obj);
+    var bytes = new TextEncoder().encode(json);
+    var bin = '';
+    for (var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+  function fromB64(str){
+    try{
+      str = str.replace(/-/g,'+').replace(/_/g,'/');
+      while (str.length % 4) str += '=';
+      var bin = atob(str);
+      var bytes = new Uint8Array(bin.length);
+      for (var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+      var json = new TextDecoder().decode(bytes);
+      return JSON.parse(json);
+    }catch(e){ return null; }
+  }
+
+  function occ(key){ for (var i=0;i<OCCASIONS.length;i++) if (OCCASIONS[i].key===key) return OCCASIONS[i]; return OCCASIONS[0]; }
+  function theme(key){ for (var i=0;i<THEMES.length;i++) if (THEMES[i].key===key) return THEMES[i]; return THEMES[0]; }
+
+  function timeSince(dateStr){
+    var start = new Date(dateStr+'T00:00:00');
+    var now = new Date();
+    if (isNaN(start.getTime()) || start > now) return {years:0,months:0,days:0,hours:0,mins:0,secs:0,totalDays:0};
+    var years = now.getFullYear()-start.getFullYear();
+    var months = now.getMonth()-start.getMonth();
+    var days = now.getDate()-start.getDate();
+    var hours = now.getHours()-start.getHours();
+    var mins = now.getMinutes()-start.getMinutes();
+    var secs = now.getSeconds()-start.getSeconds();
+    if (secs<0){ secs+=60; mins--; }
+    if (mins<0){ mins+=60; hours--; }
+    if (hours<0){ hours+=24; days--; }
+    if (days<0){ var prevMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate(); days += prevMonth; months--; }
+    if (months<0){ months+=12; years--; }
+    var totalDays = Math.floor((now - start) / 86400000);
+    return {years:years,months:months,days:days,hours:hours,mins:mins,secs:secs,totalDays:totalDays};
+  }
+
+  function compressPhoto(file, cb){
+    var reader = new FileReader();
+    reader.onerror = function(){ cb(null, true); };
+    reader.onload = function(e){
+      var img = new Image();
+      img.onerror = function(){ cb(null, true); };
+      img.onload = function(){
+        var maxW = 480;
+        var scale = Math.min(1, maxW / img.width);
+        var w = Math.max(1, Math.round(img.width * scale));
+        var h = Math.max(1, Math.round(img.height * scale));
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        cb(canvas.toDataURL('image/jpeg', 0.55), null);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function go(hash){ location.hash = hash; }
+
+  /* ============================================================
+     ROUTER
+  ============================================================ */
+  function route(){
+    var h = location.hash || '';
+    if (h.indexOf('#/g/') === 0){
+      var data = fromB64(h.slice(4));
+      renderViewer(data);
+    } else if (h === '#/crear'){
+      wizStep = 0;
+      renderWizard();
+    } else {
+      renderLanding();
+    }
+  }
+  window.addEventListener('hashchange', route);
+
+  /* ============================================================
+     LANDING
+  ============================================================ */
+  function renderLanding(){
+    stopCounter();
+    var app = document.getElementById('app');
+    var heroTime = timeSince('2019-06-14');
+
+    app.innerHTML =
+      '<div class="wrap">' +
+        '<div class="nav">' +
+          '<div class="brand"><span class="brand-mark">'+heartMark()+'</span>Soulmates</div>' +
+          '<div class="nav-links"><a href="#como-funciona">Cómo funciona</a><a href="#temas">Temas</a><a href="#precio">Precio</a></div>' +
+          '<button class="btn btn-primary btn-sm" data-go="#/crear">Crear mi página</button>' +
+        '</div>' +
+
+        '<div class="hero">' +
+          '<div>' +
+            '<div class="eyebrow">Regalos digitales · sin apps, sin cuentas</div>' +
+            '<h1>Una página <em>solo para ella</em>, o para él, o para quien quieras.</h1>' +
+            '<p class="hero-sub">Armá en minutos una página con su nombre, tu mensaje y el tiempo que llevan juntos — para parejas, amigos, familia o hasta la mascota. Se comparte con un link o un código QR para imprimir.</p>' +
+            '<div class="hero-cta">' +
+              '<button class="btn btn-primary" data-go="#/crear">Crear mi página</button>' +
+              '<a class="link-btn" href="#precio">Ver precios ↓</a>' +
+            '</div>' +
+            '<div class="hero-note">✓ Sin registrarte &nbsp; ✓ Lista en 5 minutos &nbsp; ✓ El link es para siempre</div>' +
+          '</div>' +
+          '<div class="hero-card">' +
+            '<span class="hero-card-badge">💞 Para Cande</span>' +
+            '<h3>Nuestra historia</h3>' +
+            '<p class="msg">Desde que te conocí, cada día tiene algo mejor. Esta es nuestra historia, para volver a leerla cuando quieras.</p>' +
+            '<div class="hero-counter">' +
+              '<div class="c"><b>' + heroTime.years + '</b><span>Años</span></div>' +
+              '<div class="c"><b>' + heroTime.months + '</b><span>Meses</span></div>' +
+              '<div class="c"><b>' + heroTime.days + '</b><span>Días</span></div>' +
+            '</div>' +
+            '<div class="hero-qr" id="hero-qr-box"><span>Escaneá</span></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<section id="como-funciona">' +
+        '<div class="wrap">' +
+          '<div class="section-head">' +
+            '<div class="eyebrow">Cómo funciona</div>' +
+            '<h2>Tres pasos, ningún formulario eterno.</h2>' +
+          '</div>' +
+          '<div class="steps">' +
+            '<div class="step-card"><div class="step-num">01</div><h3>Contá la historia</h3><p>Elegí el vínculo, los nombres, la fecha y escribí el mensaje. Con ejemplos listos si no sabés por dónde arrancar.</p></div>' +
+            '<div class="step-card"><div class="step-num">02</div><h3>Elegí un tema</h3><p>Cinco estilos visuales bien distintos entre sí — de romántico clásico a minimalista — y una canción si querés.</p></div>' +
+            '<div class="step-card"><div class="step-num">03</div><h3>Compartí el QR</h3><p>Tu página vive en un link único. Descargá el QR para una tarjeta, un llavero o para mandarlo directo por WhatsApp.</p></div>' +
+          '</div>' +
+        '</div>' +
+      '</section>' +
+
+      '<section id="temas">' +
+        '<div class="wrap">' +
+          '<div class="section-head">' +
+            '<div class="eyebrow">Más que parejas</div>' +
+            '<h2>Un formato para cada vínculo, y un tema para cada historia.</h2>' +
+            '<p>La mayoría de estas páginas son solo para parejas. Acá también hay lugar para amigos, familia, mascotas y aniversarios — y cinco temas visuales para elegir.</p>' +
+          '</div>' +
+          '<div class="occ-grid">' + OCCASIONS.map(function(o){
+            return '<div class="occ-card"><div class="e">'+o.e+'</div><h4>'+o.label+'</h4><p>'+o.counter+'…</p></div>';
+          }).join('') + '</div>' +
+          '<div class="theme-strip">' + THEMES.map(function(t){
+            return '<div class="theme-preview" style="background:'+t.sw[0]+'">' +
+                     '<div class="bar" style="color:'+ (t.key==='minimal' ? '#1B1220' : '#fff') + (t.key==='minimal' ? ';background:rgba(255,255,255,0.7)':'') +'">'+t.label+'</div>' +
+                   '</div>';
+          }).join('') + '</div>' +
+        '</div>' +
+      '</section>' +
+
+      '<section>' +
+        '<div class="wrap">' +
+          '<div class="section-head">' +
+            '<div class="eyebrow">La comparación honesta</div>' +
+            '<h2>En qué se parece a otras páginas de regalo, y en qué no.</h2>' +
+          '</div>' +
+          '<table class="compare">' +
+            '<tr><th></th><th>Soulmates</th><th>La mayoría de las otras</th></tr>' +
+            '<tr><td>Tipos de vínculo</td><td class="us">Pareja, amistad, familia, mascota, aniversario</td><td class="them">Casi siempre, solo pareja</td></tr>' +
+            '<tr><td>Temas visuales</td><td class="us">5 estilos, bien distintos</td><td class="them">1 o 2 variantes de color</td></tr>' +
+            '<tr><td>Cuenta / registro</td><td class="us"><span class="yes">No hace falta</span></td><td class="them">A veces piden cuenta</td></tr>' +
+            '<tr><td>Dónde vive el link</td><td class="us">En el link mismo — no depende de un servidor</td><td class="them">En un servidor propio</td></tr>' +
+            '<tr><td>Código QR</td><td class="us"><span class="yes">Incluido, descargable</span></td><td class="them">A veces es un extra pago</td></tr>' +
+            '<tr><td>Precio</td><td class="us">$10.000 o $25.000 ARS (≈US$7 / US$17), pago único</td><td class="them">Entre US$3 y US$10 (pagás en dólares)</td></tr>' +
+          '</table>' +
+        '</div>' +
+      '</section>' +
+
+      '<section id="precio">' +
+        '<div class="wrap">' +
+          '<div class="section-head">' +
+            '<div class="eyebrow">Precio</div>' +
+            '<h2>Un pago único. Nada de suscripciones.</h2>' +
+            '<p>Pagás una vez y el link queda activo para siempre — sin mensualidades. Fuera de Argentina, la referencia es en dólares — no es un cobro automático en varias monedas, es el precio a usar como base para vender ahí.</p>' +
+          '</div>' +
+          '<div class="pricing-grid">' +
+            '<div class="price-card">' +
+              '<h3>Básico</h3>' +
+              '<div class="price-amount">$10.000<span> ARS pago único · ≈US$7</span></div>' +
+              '<ul class="price-list">' +
+                '<li>✓ 3 temas visuales (Romántico, Boho, Minimal)</li>' +
+                '<li>✓ Contador en vivo y mensaje</li>' +
+                '<li>✓ Link y QR para compartir</li>' +
+                '<li>✓ Marca de agua «Hecho con Soulmates»</li>' +
+              '</ul>' +
+              '<button class="btn btn-ghost btn-block" data-go="#/crear">Crear con Básico</button>' +
+            '</div>' +
+            '<div class="price-card premium">' +
+              '<h3>Premium</h3>' +
+              '<div class="price-amount">$25.000<span> ARS pago único · ≈US$17</span></div>' +
+              '<ul class="price-list">' +
+                '<li>✓ Todo lo del plan Básico</li>' +
+                '<li>✓ Los 5 temas, incluidos Nocturno y Divertido</li>' +
+                '<li>✓ Una foto y una canción</li>' +
+                '<li>✓ Sin marca de agua</li>' +
+              '</ul>' +
+              '<button class="btn btn-gold btn-block" data-go="#/crear">Crear con Premium</button>' +
+              '<div class="price-note">Costo de mantener cada página: prácticamente $0 — el margen es alto incluso a este precio.</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</section>' +
+
+      '<footer class="wrap">' +
+        '<div>💞 Soulmates — páginas para regalar</div>' +
+        '<div>Prototipo funcional. La activación real de pagos (Mercado Pago / Stripe) es el siguiente paso.</div>' +
+      '</footer>';
+
+    document.querySelectorAll('[data-go]').forEach(function(btn){
+      btn.addEventListener('click', function(){ go(btn.getAttribute('data-go')); });
+    });
+
+    try{
+      var qrBox = document.getElementById('hero-qr-box');
+      if (qrBox){
+        var c = document.createElement('canvas');
+        qrBox.insertBefore(c, qrBox.firstChild);
+        new QRious({element:c, value:location.href.split('#')[0]+'#/g/'+toB64({occasion:'pareja',from:'Juan',to:'Cande',date:'2019-06-14',message:'Desde que te conocí, cada día tiene algo mejor.',theme:'romantico',plan:'premium'}), size:64, background:'#fff', foreground:'#1B1220', level:'L'});
+      }
+    }catch(e){}
+  }
+
+  /* ============================================================
+     WIZARD
+  ============================================================ */
+  function renderWizard(){
+    stopCounter();
+    var app = document.getElementById('app');
+
+    var progress = WIZ_STEPS.slice(0,-1).map(function(k,i){
+      return '<i class="'+(i<=stepIndexForProgress()?'done':'')+'"></i>';
+    }).join('');
+
+    app.innerHTML =
+      '<div class="wiz-shell">' +
+        '<div class="wiz-top">' +
+          '<button class="btn btn-ghost btn-sm" id="wiz-back">← Salir</button>' +
+          '<div class="wiz-progress">'+progress+'</div>' +
+          '<div style="width:74px"></div>' +
+        '</div>' +
+        '<div class="wiz-panel" id="wiz-panel"></div>' +
+      '</div>';
+
+    document.getElementById('wiz-back').addEventListener('click', function(){ go('#/'); });
+    renderWizStep();
+  }
+
+  function stepIndexForProgress(){
+    var idx = WIZ_STEPS.indexOf(WIZ_STEPS[wizStep]);
+    return idx;
+  }
+
+  function renderWizStep(){
+    var panel = document.getElementById('wiz-panel');
+    var key = WIZ_STEPS[wizStep];
+    var html = '';
+
+    if (key === 'ocasion'){
+      html =
+        '<div class="wiz-step-label">Paso 1 de 6</div>' +
+        '<h2>¿Para quién es esta página?</h2>' +
+        '<p class="hint">Esto define el tono del mensaje sugerido y el nombre del contador.</p>' +
+        '<div class="pick-grid cols-5" id="occ-picks">' + OCCASIONS.map(function(o){
+          return '<button class="pick'+(draft.occasion===o.key?' active':'')+'" data-occ="'+o.key+'"><span class="e">'+o.e+'</span><span class="l">'+o.label+'</span></button>';
+        }).join('') + '</div>' +
+        navButtons(false, true);
+    }
+
+    else if (key === 'protagonistas'){
+      html =
+        '<div class="wiz-step-label">Paso 2 de 6</div>' +
+        '<h2>¿Quiénes son?</h2>' +
+        '<p class="hint">El contador de «'+occ(draft.occasion).counter+'» se arma con la fecha que pongas.</p>' +
+        '<div class="field-row">' +
+          '<div class="field"><label>De</label><input type="text" id="f-from" value="'+esc(draft.from)+'" placeholder="Tu nombre"></div>' +
+          '<div class="field"><label>Para</label><input type="text" id="f-to" value="'+esc(draft.to)+'" placeholder="Su nombre"></div>' +
+        '</div>' +
+        '<div class="field"><label>'+occ(draft.occasion).counter+'</label><input type="date" id="f-date" value="'+esc(draft.date)+'"></div>' +
+        navButtons(true, true);
+    }
+
+    else if (key === 'mensaje'){
+      html =
+        '<div class="wiz-step-label">Paso 3 de 6</div>' +
+        '<h2>Escribí el mensaje</h2>' +
+        '<p class="hint">Va dentro de un sobre que se abre con un clic. Si no se te ocurre nada, dejamos un ejemplo cargado.</p>' +
+        '<div class="field"><label>Título (opcional)</label><input type="text" id="f-title" value="'+esc(draft.title)+'" placeholder="Nuestra historia"></div>' +
+        '<div class="field"><label>Mensaje</label><textarea id="f-message" maxlength="600" placeholder="'+esc(occ(draft.occasion).ph)+'">'+esc(draft.message)+'</textarea><div class="field-count" id="msg-count"></div></div>' +
+        navButtons(true, true);
+    }
+
+    else if (key === 'extras'){
+      var canPhoto = PLAN_FEATURES[draft.plan].photo;
+      var canSong = PLAN_FEATURES[draft.plan].song;
+      html =
+        '<div class="wiz-step-label">Paso 5 de 6</div>' +
+        '<h2>Una canción y una foto</h2>' +
+        '<p class="hint">Ambas son opcionales y quedan disponibles en el plan Premium. La foto se guarda dentro del link (no hay servidor de por medio), así que la comprimimos automáticamente.</p>' +
+        '<div class="field"><label>Link de YouTube ' + (canSong?'':'<span style="color:var(--gold-soft)">— Premium</span>') + '</label>' +
+          '<input type="url" id="f-song" '+(canSong?'':'disabled') +' value="'+esc(draft.song)+'" placeholder="https://youtube.com/watch?v=..."></div>' +
+        '<div class="field"><label>Foto ' + (canPhoto?'':'<span style="color:var(--gold-soft)">— Premium</span>') + '</label>' +
+          (draft.photo ?
+            '<div style="display:flex;align-items:center;gap:12px;margin-top:4px">' +
+              '<img src="'+draft.photo+'" style="width:64px;height:64px;object-fit:cover;border-radius:10px">' +
+              '<button class="btn btn-ghost btn-sm" id="remove-photo" type="button">Quitar foto</button>' +
+            '</div>' :
+            '<input type="file" accept="image/*" id="f-photo" '+(canPhoto?'':'disabled')+'>'
+          ) +
+        '</div>' +
+        '<div id="photo-status" class="hint" style="margin-top:8px"></div>' +
+        (canPhoto ? '<p class="hint" style="margin-top:8px">💡 El código QR puede volverse muy denso con foto incluida y no escanear bien en algunos celulares — si pasa, compartí el link directo por WhatsApp en vez del QR.</p>' : '') +
+        navButtons(true, true);
+    }
+
+    else if (key === 'tema'){
+      html =
+        '<div class="wiz-step-label">Paso 6 de 6</div>' +
+        '<h2>Elegí un tema visual</h2>' +
+        '<p class="hint">Así se va a ver la página que reciba '+ (draft.to ? esc(draft.to) : 'la otra persona') +'.</p>' +
+        '<div class="pick-grid cols-5" id="theme-picks">' + THEMES.map(function(t){
+          var locked = t.premium && draft.plan === 'free';
+          return '<button class="pick theme-pick'+(draft.theme===t.key?' active':'')+'" data-theme="'+t.key+'" style="'+(locked?'opacity:.55':'')+'">' +
+                   '<span class="sw"><i style="background:'+t.sw[0]+'"></i><i style="background:'+t.sw[1]+'"></i><i style="background:'+t.sw[2]+'"></i></span>' +
+                   '<span class="l">'+t.label+(locked?' <span style="color:var(--gold-soft)">✦</span>':'')+'</span>' +
+                 '</button>';
+        }).join('') + '</div>' +
+        navButtons(true, true);
+    }
+
+    else if (key === 'plan'){
+      html =
+        '<div class="wiz-step-label">Paso 4 de 6</div>' +
+        '<h2>Elegí un plan</h2>' +
+        '<p class="hint">Esto es un prototipo: el botón todavía no cobra de verdad, sólo activa las funciones del plan para que veas la diferencia.</p>' +
+        '<div class="plan-grid">' +
+          '<div class="plan-pick'+(draft.plan==='free'?' active':'')+'" data-plan="free">' +
+            '<h4>Básico</h4><div class="amt">$10.000 ARS · ≈US$7 (demo)</div>' +
+            '<ul><li>3 temas visuales</li><li>Contador y mensaje</li><li>Con marca de agua</li></ul>' +
+            '<button class="btn btn-ghost btn-sm btn-block" data-plan-btn="free" style="margin-top:14px">Elegir Básico</button>' +
+          '</div>' +
+          '<div class="plan-pick'+(draft.plan==='premium'?' active':'')+'" data-plan="premium">' +
+            '<h4>Premium <span style="color:var(--gold-soft)">✦</span></h4><div class="amt">$25.000 ARS · ≈US$17 (demo)</div>' +
+            '<ul><li>Los 5 temas</li><li>Foto + canción</li><li>Sin marca de agua</li></ul>' +
+            '<button class="btn btn-gold btn-sm btn-block" data-plan-btn="premium" style="margin-top:14px">Elegir Premium</button>' +
+          '</div>' +
+        '</div>' +
+        navButtons(true, true);
+    }
+
+    else if (key === 'listo'){
+      html =
+        '<div class="wiz-step-label">Vista previa</div>' +
+        '<h2>Así se va a ver</h2>' +
+        '<p class="hint">Revisá todo antes de publicar — después vas a poder copiar el link y descargar el QR.</p>' +
+        '<div id="preview-slot" style="margin-top:20px;border-radius:16px;overflow:hidden;"></div>' +
+        '<div class="wiz-nav">' +
+          '<button class="btn btn-ghost" id="wiz-prev">← Atrás</button>' +
+          '<button class="btn btn-primary" id="wiz-publish">Publicar mi página</button>' +
+        '</div>';
+    }
+
+    panel.innerHTML = html;
+    bindWizStep(key);
+  }
+
+  function navButtons(showBack, showNext){
+    return '<div class="wiz-nav">' +
+      (showBack ? '<button class="btn btn-ghost" id="wiz-prev">← Atrás</button>' : '<span></span>') +
+      (showNext ? '<button class="btn btn-primary" id="wiz-next">Continuar →</button>' : '<span></span>') +
+    '</div>';
+  }
+
+  function bindWizStep(key){
+    var prev = document.getElementById('wiz-prev');
+    var next = document.getElementById('wiz-next');
+    if (prev) prev.addEventListener('click', function(){ wizStep = Math.max(0, wizStep-1); renderWizStep(); });
+    if (next) next.addEventListener('click', function(){ wizStep = Math.min(WIZ_STEPS.length-1, wizStep+1); renderWizStep(); });
+
+    if (key === 'ocasion'){
+      document.querySelectorAll('[data-occ]').forEach(function(b){
+        b.addEventListener('click', function(){ draft.occasion = b.getAttribute('data-occ'); renderWizStep(); });
+      });
+    }
+
+    if (key === 'protagonistas'){
+      document.getElementById('f-from').addEventListener('input', function(e){ draft.from = e.target.value; });
+      document.getElementById('f-to').addEventListener('input', function(e){ draft.to = e.target.value; });
+      document.getElementById('f-date').addEventListener('input', function(e){ draft.date = e.target.value; });
+    }
+
+    if (key === 'mensaje'){
+      var title = document.getElementById('f-title');
+      var msg = document.getElementById('f-message');
+      var count = document.getElementById('msg-count');
+      function updateCount(){ count.textContent = (msg.value.length) + ' / 600'; }
+      title.addEventListener('input', function(e){ draft.title = e.target.value; });
+      msg.addEventListener('input', function(e){ draft.message = e.target.value; updateCount(); });
+      updateCount();
+    }
+
+    if (key === 'extras'){
+      var song = document.getElementById('f-song');
+      var photo = document.getElementById('f-photo');
+      var removeBtn = document.getElementById('remove-photo');
+      var status = document.getElementById('photo-status');
+      if (song) song.addEventListener('input', function(e){ draft.song = e.target.value; });
+      if (photo) photo.addEventListener('change', function(e){
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        status.innerHTML = '<span class="beat-mini">'+heartMark()+'</span>Comprimiendo…';
+        compressPhoto(file, function(dataUrl, err){
+          if (err){ status.textContent = 'No se pudo leer esa imagen, probá con otra.'; return; }
+          draft.photo = dataUrl;
+          renderWizStep();
+        });
+      });
+      if (removeBtn) removeBtn.addEventListener('click', function(){ draft.photo=''; renderWizStep(); });
+    }
+
+    if (key === 'tema'){
+      document.querySelectorAll('[data-theme]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var k = b.getAttribute('data-theme');
+          var locked = theme(k).premium && draft.plan === 'free';
+          if (locked){ wizStep = WIZ_STEPS.indexOf('plan'); renderWizStep(); return; }
+          draft.theme = k;
+          renderWizStep();
+        });
+      });
+    }
+
+    if (key === 'plan'){
+      document.querySelectorAll('[data-plan-btn]').forEach(function(b){
+        b.addEventListener('click', function(){
+          var p = b.getAttribute('data-plan-btn');
+          draft.plan = p;
+          if (p === 'free'){
+            draft.photo = ''; draft.song = '';
+            if (theme(draft.theme).premium) draft.theme = 'romantico';
+          }
+          renderWizStep();
+        });
+      });
+    }
+
+    if (key === 'listo'){
+      var slot = document.getElementById('preview-slot');
+      slot.innerHTML = giftCardHTML(draft, {compact:true});
+      document.getElementById('wiz-publish').addEventListener('click', publish);
+    }
+  }
+
+  function publish(){
+    var payload = {
+      occasion:draft.occasion, from:draft.from||'Alguien', to:draft.to||'vos', date:draft.date||new Date().toISOString().slice(0,10),
+      title:draft.title, message: draft.message || occ(draft.occasion).ph,
+      song: PLAN_FEATURES[draft.plan].song ? draft.song : '',
+      photo: PLAN_FEATURES[draft.plan].photo ? draft.photo : '',
+      theme: draft.theme, plan: draft.plan
+    };
+    var b64 = toB64(payload);
+    publishedLink = location.href.split('#')[0] + '#/g/' + b64;
+    renderShare(payload, b64);
+  }
+
+  /* ============================================================
+     SHARE SCREEN
+  ============================================================ */
+  function renderShare(payload, b64){
+    stopCounter();
+    var app = document.getElementById('app');
+    var heavy = b64.length > 1400;
+    app.innerHTML =
+      '<div class="share-shell">' +
+        '<div class="brand-mark beat" style="width:34px;height:34px;margin:0 auto 16px;">'+heartMark()+'</div>' +
+        '<div class="eyebrow">Publicada</div>' +
+        '<h2>Tu página ya existe.</h2>' +
+        '<p class="hint">Compartí el link o descargá el código QR. No hace falta que nadie inicie sesión para verla.</p>' +
+        '<div class="qr-box"><canvas id="final-qr"></canvas></div>' +
+        (heavy ? '<div class="qr-warn">⚠️ Con la foto incluida, el link es largo y el QR queda muy denso — puede costarle a algunos celulares escanearlo. Si falla, compartí el link directo.</div>' : '') +
+        '<div class="link-row"><input type="text" readonly id="final-link" value="'+esc(publishedLink)+'"><button class="btn btn-ghost btn-sm" id="copy-link">Copiar</button></div>' +
+        '<div class="share-actions">' +
+          '<button class="btn btn-primary" id="dl-qr">Descargar QR</button>' +
+          '<button class="btn btn-ghost" id="view-gift">Ver la página →</button>' +
+        '</div>' +
+        '<div style="margin-top:34px"><button class="link-btn" id="back-home">Crear otra página</button></div>' +
+      '</div>';
+
+    var canvas = document.getElementById('final-qr');
+    new QRious({element:canvas, value:publishedLink, size:220, background:'#fff', foreground:'#1B1220', level: heavy ? 'L' : 'M'});
+
+    document.getElementById('copy-link').addEventListener('click', function(){
+      var input = document.getElementById('final-link');
+      input.select();
+      try{ navigator.clipboard.writeText(publishedLink); }catch(e){ try{ document.execCommand('copy'); }catch(e2){} }
+      var btn = document.getElementById('copy-link');
+      var old = btn.textContent; btn.textContent = '¡Copiado!';
+      setTimeout(function(){ btn.textContent = old; }, 1500);
+    });
+
+    document.getElementById('dl-qr').addEventListener('click', function(){
+      if (!downloadsApi){ alert('La descarga no está disponible en esta vista. Podés hacer clic derecho sobre el QR y elegir "Guardar imagen".'); return; }
+      canvas.toBlob(function(blob){
+        downloadsApi.save({filename:'latido-qr.png', data: blob})['catch'](function(){});
+      }, 'image/png');
+    });
+
+    document.getElementById('view-gift').addEventListener('click', function(){ location.hash = '/g/' + b64; });
+    document.getElementById('back-home').addEventListener('click', function(){ go('#/'); });
+  }
+
+  /* ============================================================
+     GIFT CARD (shared markup for preview + viewer)
+  ============================================================ */
+  function giftCardHTML(d, opts){
+    opts = opts || {};
+    var o = occ(d.occasion);
+    var t = timeSince(d.date);
+    var title = d.title ? esc(d.title) : (o.key==='pareja' ? 'Nuestra historia' : (o.key==='mascota' ? 'Para vos, con patas' : 'Este es nuestro momento'));
+    var message = esc(d.message || o.ph);
+
+    return (
+      '<div class="gift-card t-'+esc(d.theme)+'" id="gift-card-el">' +
+        '<div class="gift-eyebrow">'+o.e+' Para '+esc(d.to||'vos')+'</div>' +
+        '<h1>'+title+'</h1>' +
+        '<div class="gift-since">' +
+          '<div class="c"><b>'+t.years+'</b><span>Años</span></div>' +
+          '<div class="c"><b>'+t.months+'</b><span>Meses</span></div>' +
+          '<div class="c"><b>'+t.days+'</b><span>Días</span></div>' +
+          '<div class="c"><b id="gift-secs">'+t.secs+'</b><span>Segundos</span></div>' +
+        '</div>' +
+        (d.photo ? '<div class="gift-photo"><img src="'+esc(d.photo)+'" alt="" loading="lazy" onerror="this.parentNode.style.display=\'none\'"></div>' : '') +
+        '<div class="envelope" id="envelope">' +
+          (opts.compact ?
+            '<div class="gift-message">'+message+'</div>' :
+            '<button id="open-envelope">💌 Abrir el mensaje</button>'
+          ) +
+        '</div>' +
+        (d.song ? '<div class="gift-song"><a class="song-chip" href="'+esc(d.song)+'" target="_blank" rel="noopener">🎵 Escuchar nuestra canción</a></div>' : '') +
+        '<div class="gift-foot"><span>De '+esc(d.from||'alguien')+'</span>' + (d.plan==='free' ? '<a href="'+location.href.split('#')[0]+'" target="_blank">Hecho con Soulmates 💞</a>' : '<span>'+o.counter+' '+t.totalDays+' días</span>') + '</div>' +
+      '</div>'
+    );
+  }
+
+  function stopCounter(){ if (counterTimer){ clearInterval(counterTimer); counterTimer = null; } }
+
+  /* ============================================================
+     VIEWER (what the QR / link opens)
+  ============================================================ */
+  function renderViewer(data){
+    stopCounter();
+    var app = document.getElementById('app');
+    if (!data){
+      app.innerHTML = '<div class="gift-outer" style="background:var(--ground)"><div class="gift-notfound"><h2>Esta página no existe (o el link está incompleto).</h2><p style="margin-top:12px;color:var(--text-soft)"><a class="link-btn" href="#/" style="color:var(--accent)">Crear la tuya →</a></p></div></div>';
+      return;
+    }
+
+    var emojiRain = '';
+    var e = occ(data.occasion).e;
+    for (var i=0;i<10;i++){
+      var left = Math.random()*100;
+      var delay = (Math.random()*10).toFixed(2);
+      var dur = (10+Math.random()*8).toFixed(2);
+      emojiRain += '<span class="float-emoji" style="left:'+left+'%;animation-delay:'+delay+'s;animation-duration:'+dur+'s;">'+e+'</span>';
+    }
+
+    var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+    app.innerHTML =
+      (reduceMotion ? '' :
+        '<div class="reveal-overlay" id="reveal-overlay">' +
+          '<div class="reveal-heart" id="reveal-heart">' +
+            '<span class="half half-left">'+heartHalfSVG('left','#C4425B')+'</span>' +
+            '<span class="half half-right">'+heartHalfSVG('right','#C9A24B')+'</span>' +
+          '</div>' +
+        '</div>'
+      ) +
+      '<div class="gift-outer">' +
+        emojiRain +
+        giftCardHTML(data, {compact:false}) +
+      '</div>';
+
+    if (!reduceMotion){
+      var overlay = document.getElementById('reveal-overlay');
+      var heart = document.getElementById('reveal-heart');
+      setTimeout(function(){ if (heart) heart.classList.add('opening'); }, 520);
+      setTimeout(function(){ if (overlay) overlay.classList.add('hide'); }, 900);
+      setTimeout(function(){ if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 1450);
+    }
+
+    var openBtn = document.getElementById('open-envelope');
+    if (openBtn){
+      openBtn.addEventListener('click', function(){
+        var box = document.getElementById('envelope');
+        box.innerHTML = '<div class="gift-message">'+esc(data.message)+'</div>';
+      });
+    }
+
+    counterTimer = setInterval(function(){
+      var t = timeSince(data.date);
+      var secEl = document.getElementById('gift-secs');
+      if (secEl) secEl.textContent = t.secs; else stopCounter();
+    }, 1000);
+  }
+
+  /* ============================================================
+     BOOT
+  ============================================================ */
+  route();
+})();
+</script>
+
+</body>
+</html>
