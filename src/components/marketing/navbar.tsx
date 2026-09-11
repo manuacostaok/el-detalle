@@ -31,9 +31,9 @@ export function Navbar() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 xs:gap-3">
           {user && user !== "loading" ? (
-            <Button href="/app" variant="ghost" size="sm">
+            <Button href="/app" variant="ghost" size="sm" className="hidden xs:inline-flex">
               Mis páginas
             </Button>
           ) : (
@@ -44,8 +44,9 @@ export function Navbar() {
               Iniciar sesión
             </Link>
           )}
-          <Button href="/crear" size="sm">
-            Crear mi página
+          <Button href="/crear" size="sm" className="whitespace-nowrap">
+            <span className="hidden xs:inline">Crear mi página</span>
+            <span className="xs:hidden">Crear</span>
           </Button>
         </div>
       </Container>

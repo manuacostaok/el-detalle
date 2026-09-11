@@ -57,6 +57,7 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- stripping non-DOM props before spreading the rest
   const { href: _href, variant: _v, size: _s, block: _b, className: _c, children: _ch, ...rest } =
     props as ButtonAsButton;
   return (

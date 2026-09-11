@@ -23,6 +23,9 @@ export function HeroPreviewCard() {
   const [origin, setOrigin] = useState("");
 
   useEffect(() => {
+    // window.location only exists client-side; the QR is intentionally absent from the
+    // SSR markup and appears once mounted, so there's no server/client mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
     const id = setInterval(() => setSince(timeSince(DEMO_PAYLOAD.date)), 60000);
     return () => clearInterval(id);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { newId, readJSON, writeJSON } from "./storage";
 import type { MockUser } from "./types";
 
@@ -23,6 +23,10 @@ function setSession(session: Session) {
   window.dispatchEvent(new Event("soulmates:session-changed"));
 }
 
+function toPublicUser(user: StoredUser): MockUser {
+  return { id: user.id, name: user.name, email: user.email, createdAt: user.createdAt };
+}
+
 export function signUp(name: string, email: string, password: string): MockUser | { error: string } {
   const users = getUsers();
   if (users.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
@@ -31,8 +35,7 @@ export function signUp(name: string, email: string, password: string): MockUser 
   const user: StoredUser = { id: newId("user"), name, email, password, createdAt: new Date().toISOString() };
   writeJSON(USERS_KEY, [...users, user]);
   setSession({ userId: user.id });
-  const { password: _pw, ...publicUser } = user;
-  return publicUser;
+  return toPublicUser(user);
 }
 
 export function signIn(email: string, password: string): MockUser | { error: string } {
@@ -42,39 +45,42 @@ export function signIn(email: string, password: string): MockUser | { error: str
     return { error: "Email o contraseña incorrectos." };
   }
   setSession({ userId: user.id });
-  const { password: _pw, ...publicUser } = user;
-  return publicUser;
+  return toPublicUser(user);
 }
 
 export function signOut() {
   setSession(null);
 }
 
+// useSyncExternalStore requires a stable reference when nothing changed, so we cache
+// the last snapshot by user id instead of building a fresh object on every call.
+let cachedUserId: string | null = null;
+let cachedUser: MockUser | null = null;
+
 function currentUser(): MockUser | null {
   const session = getSession();
-  if (!session) return null;
-  const user = getUsers().find((u) => u.id === session.userId);
-  if (!user) return null;
-  const { password: _pw, ...publicUser } = user;
-  return publicUser;
+  const userId = session?.userId ?? null;
+  if (userId === cachedUserId) return cachedUser;
+  cachedUserId = userId;
+  const user = userId ? getUsers().find((u) => u.id === userId) : undefined;
+  cachedUser = user ? toPublicUser(user) : null;
+  return cachedUser;
 }
 
-export function useSession() {
-  const [user, setUser] = useState<MockUser | null | "loading">("loading");
+function subscribe(callback: () => void) {
+  window.addEventListener("soulmates:session-changed", callback);
+  window.addEventListener("storage", callback);
+  return () => {
+    window.removeEventListener("soulmates:session-changed", callback);
+    window.removeEventListener("storage", callback);
+  };
+}
 
-  const refresh = useCallback(() => {
-    setUser(currentUser());
-  }, []);
-
-  useEffect(() => {
-    refresh();
-    window.addEventListener("soulmates:session-changed", refresh);
-    window.addEventListener("storage", refresh);
-    return () => {
-      window.removeEventListener("soulmates:session-changed", refresh);
-      window.removeEventListener("storage", refresh);
-    };
-  }, [refresh]);
-
-  return user;
+/** Sincroniza con la sesión mock en localStorage (ver BACKEND.md para auth real). */
+export function useSession(): MockUser | null | "loading" {
+  return useSyncExternalStore<MockUser | null | "loading">(
+    subscribe,
+    currentUser,
+    () => "loading",
+  );
 }
