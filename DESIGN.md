@@ -239,12 +239,20 @@ preparando y entregando un regalo: "Sellar mi detalle" (publicar), "Mis detalles
 "Entregar por WhatsApp" (compartir). El mensaje pre-cargado de WhatsApp
 (`share-screen.tsx`) es explícitamente emocional, no un link pelado.
 
+## 12.1. Wizard: vista previa en vivo
+
+El wizard (`/crear`) ahora es de dos columnas en desktop (`lg:grid-cols-[1fr_380px]`):
+el formulario a la izquierda, y a la derecha un panel `sticky` con el `GiftCard` real
+actualizándose con cada campo que se completa ("Así va tomando forma"). Objetivo directo
+del brief: que se sienta como armar un regalo y verlo tomar forma, no completar un
+formulario a ciegas hasta el paso final. En mobile el panel se oculta (`hidden lg:block`)
+y el último paso conserva su propia vista previa compacta como única confirmación antes
+de sellar — mobile sigue siendo de una sola columna, sin el panel persistente.
+
 ## 12. Qué queda pendiente (no implementado en esta pasada)
 
 Documentado acá para que quede explícito qué NO se tocó todavía, dado el tamaño del
 brief original:
-- Rediseño visual completo del wizard más allá del copy/microcopy (sigue siendo el mismo
-  layout de formulario de antes, con textos y nombres de plan actualizados).
 - Tratamiento editorial completo de fotografía (full-bleed, crops cinematográficos) en
   `PhotoTimeline` — hoy son thumbnails rectangulares simples, funcionales pero no la
   pieza "álbum/diario" descripta en el brief.

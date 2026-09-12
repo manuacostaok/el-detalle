@@ -235,23 +235,24 @@ function CreateWizardInner() {
   };
 
   return (
-    <div className="mx-auto max-w-[760px] px-6 pt-10 pb-24">
+    <div className="mx-auto max-w-[1180px] px-6 pt-10 pb-24">
       <div className="flex items-center justify-between mb-[30px]">
         <Link href="/" className="rounded-full border border-line-strong px-4 py-2 text-[13px] text-text hover:border-text-soft">
           ← Salir
         </Link>
-        <div className="flex flex-1 gap-1.5 mx-6">
+        <div className="flex flex-1 gap-1.5 mx-6 max-w-[560px]">
           {WIZ_STEPS.slice(0, -1).map((s, i) => (
             <i
               key={s}
-              className={`flex-1 h-[3px] rounded-full ${i <= wizStep ? "bg-accent" : "bg-line-strong"}`}
+              className={`flex-1 h-[3px] rounded-full transition-colors duration-300 ${i <= wizStep ? "bg-accent" : "bg-line-strong"}`}
             />
           ))}
         </div>
         <div className="w-[74px]" />
       </div>
 
-      <div className="rounded-[22px] border border-line bg-surface p-6 sm:p-[38px]">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
+      <div className="mx-auto w-full max-w-[560px] rounded-[22px] border border-line bg-surface p-6 sm:p-[38px]">
         {key === "ocasion" && (
           <>
             <StepLabel n={1} />
@@ -624,18 +625,31 @@ function CreateWizardInner() {
         {key === "listo" && (
           <>
             <div className="font-mono text-[11.5px] text-text-faint text-center mb-2">
-              Vista previa
+              Último paso
             </div>
             <h2 className="text-[25px]">Así se va a ver el detalle</h2>
             <p className="mt-2 text-[14px] text-text-soft">
               Revisalo antes de sellarlo — después vas a poder copiar el link y descargar el QR.
             </p>
-            <div className="mt-5">
+            <div className="mt-5 lg:hidden">
               <GiftCard payload={previewPayload} compact />
             </div>
             <Nav onBack={prev} nextLabel="Sellar mi detalle ✦" onFinish={publish} />
           </>
         )}
+      </div>
+
+      <aside className="hidden lg:block lg:sticky lg:top-10">
+        <div className="font-mono text-[11px] uppercase tracking-[0.12em] text-text-faint text-center">
+          Así va tomando forma
+        </div>
+        <div key={draft.theme} className="mt-4 animate-frame-in">
+          <GiftCard payload={previewPayload} compact />
+        </div>
+        <p className="mt-4 text-center text-[12.5px] text-text-faint">
+          Se actualiza con cada dato que cargás.
+        </p>
+      </aside>
       </div>
     </div>
   );
