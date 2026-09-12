@@ -43,6 +43,28 @@ reales en ningún lado — el dashboard, los pagos y el admin son simulaciones e
 - **Falta**: tracking real de vistas del visor `/r/[payload]` (tabla `PageView` o servicio
   externo tipo Plausible/PostHog, respetando privacidad — sin cookies de terceros).
 
+## Sinastría con IA (Premium) — esto SÍ es backend real
+- **Ya implementado, no es mock**: `POST /api/synastria` (`src/app/api/synastria/route.ts`)
+  hace tres llamadas reales:
+  1. Geocodifica el lugar de nacimiento de cada persona con **Nominatim** (OpenStreetMap,
+     gratis, sin API key).
+  2. Calcula la carta natal real de cada uno con `circular-natal-horoscope-js` (ephemeris
+     Moshier, MIT, corre local — no llama a ningún servicio externo ni tiene costo) y los
+     aspectos cruzados entre ambas cartas (`src/lib/astro/synastry-aspects.ts`).
+  3. Le pide a **Gemini** (`GEMINI_API_KEY`, capa gratuita de Google AI Studio) que redacte
+     la interpretación en español, **restringida a los datos reales calculados** — el prompt
+     (`src/lib/astro/prompt.ts`) le prohíbe inventar otros aspectos.
+- El resultado se genera **una sola vez** en el wizard y se guarda como texto dentro del
+  payload — ver la página nunca vuelve a llamar a la API. Los datos de nacimiento (fecha,
+  hora, lugar) NO se guardan en el link compartido, solo el texto final y los signos — por
+  privacidad y para no inflar el payload.
+- **Variable de entorno requerida en Vercel**: `GEMINI_API_KEY` (Production). Si se quiere
+  iterar en local o en preview deployments, hay que agregarla también en esos entornos desde
+  Vercel → Project Settings → Environment Variables.
+- **Límite conocido**: la capa gratuita de Gemini tiene un límite de requests por día. Si el
+  producto escala en volumen real, este es el primer lugar donde aparecería un costo (pasar a
+  un tier pago de Gemini, u otro proveedor).
+
 ## SEO / Open Graph
 - **Falta en ambos (original y esta build)**: imagen `og:image` real generada por página o
   al menos una genérica de marca — hoy no hay ninguna imagen de preview al compartir.
