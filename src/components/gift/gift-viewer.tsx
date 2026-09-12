@@ -10,6 +10,7 @@ import { FloatEmoji } from "@/components/gift/float-emoji";
 import { ConstellationCard } from "@/components/gift/constellation-card";
 import { LoveStats } from "@/components/gift/love-stats";
 import { FutureLetter } from "@/components/gift/future-letter";
+import { SynastryCard } from "@/components/gift/synastry-card";
 
 export function GiftViewer({ payload }: { payload: GiftPagePayload }) {
   const style = GIFT_THEME_STYLES[payload.theme];
@@ -30,6 +31,9 @@ export function GiftViewer({ payload }: { payload: GiftPagePayload }) {
             <ConstellationCard from={payload.from} to={payload.to} />
             <LoveStats date={payload.date} />
           </>
+        )}
+        {payload.synastry && (
+          <SynastryCard synastry={payload.synastry} from={payload.from} to={payload.to} />
         )}
         {payload.futureLetter && (
           <FutureLetter

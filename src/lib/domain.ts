@@ -149,6 +149,19 @@ export type GiftPagePayload = {
   plan: PlanKey;
   /** Cápsula del tiempo — Premium: un mensaje extra que se revela recién en `unlockDate`. */
   futureLetter?: { unlockDate: string; message: string };
+  /** Sinastría — Premium: generada una sola vez (carta natal real + IA) y cacheada acá. */
+  synastry?: SynastryResult;
+};
+
+export type SynastryResult = {
+  text: string;
+  sunA: string;
+  sunB: string;
+  moonA: string;
+  moonB: string;
+  risingA?: string;
+  risingB?: string;
+  approxTime: boolean;
 };
 
 export function timeSince(dateStr: string) {

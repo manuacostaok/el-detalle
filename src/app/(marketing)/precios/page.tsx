@@ -73,6 +73,7 @@ export default function PreciosPage() {
                 <li>✓ Una foto y una canción</li>
                 <li>✓ Su propia constelación + estadísticas de la relación</li>
                 <li>✓ Cápsula del tiempo: una carta que se abre en el futuro</li>
+                <li>✓ Sinastría astrológica real, escrita con IA</li>
                 <li>✓ Sin marca de agua</li>
               </ul>
               <Button href="/crear?plan=premium" variant="gold" block>

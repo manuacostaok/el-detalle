@@ -15,6 +15,11 @@ import { compressPhoto } from "@/lib/compress-photo";
 import { encodePayload } from "@/lib/payload";
 import { useSession } from "@/lib/mock/auth";
 import { createPage } from "@/lib/mock/pages";
+import type { SynastryResult } from "@/lib/domain";
+
+type BirthInfo = { date: string; time: string; timeKnown: boolean; place: string };
+
+const EMPTY_BIRTH: BirthInfo = { date: "", time: "", timeKnown: false, place: "" };
 
 type Draft = {
   occasion: OccasionKey;
@@ -29,6 +34,8 @@ type Draft = {
   plan: PlanKey;
   futureLetterDate: string;
   futureLetterMessage: string;
+  birthA: BirthInfo;
+  birthB: BirthInfo;
 };
 
 const EMPTY_DRAFT: Omit<Draft, "plan"> = {
@@ -43,6 +50,8 @@ const EMPTY_DRAFT: Omit<Draft, "plan"> = {
   theme: "romantico",
   futureLetterDate: "",
   futureLetterMessage: "",
+  birthA: EMPTY_BIRTH,
+  birthB: EMPTY_BIRTH,
 };
 
 function CreateWizardInner() {
@@ -54,6 +63,9 @@ function CreateWizardInner() {
   const [wizStep, setWizStep] = useState(0);
   const [photoStatus, setPhotoStatus] = useState<string | null>(null);
   const [published, setPublished] = useState<{ link: string; b64Length: number; saved: boolean } | null>(null);
+  const [synastry, setSynastry] = useState<SynastryResult | null>(null);
+  const [synastryStatus, setSynastryStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [synastryError, setSynastryError] = useState<string | null>(null);
 
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((d) => ({ ...d, [key]: value }));
@@ -77,6 +89,28 @@ function CreateWizardInner() {
     }
   }
 
+  async function generateSynastry() {
+    setSynastryStatus("loading");
+    setSynastryError(null);
+    try {
+      const res = await fetch("/api/synastria", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          a: { name: draft.from || "Alguien", ...draft.birthA },
+          b: { name: draft.to || "Alguien", ...draft.birthB },
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "No se pudo generar la sinastría.");
+      setSynastry(data as SynastryResult);
+      setSynastryStatus("idle");
+    } catch (err) {
+      setSynastryStatus("error");
+      setSynastryError(err instanceof Error ? err.message : "No se pudo generar la sinastría.");
+    }
+  }
+
   function publish() {
     const hasFutureLetter =
       draft.plan === "premium" && draft.futureLetterDate.trim() && draft.futureLetterMessage.trim();
@@ -94,6 +128,7 @@ function CreateWizardInner() {
       futureLetter: hasFutureLetter
         ? { unlockDate: draft.futureLetterDate, message: draft.futureLetterMessage }
         : undefined,
+      synastry: draft.plan === "premium" && synastry ? synastry : undefined,
     };
     const b64 = encodePayload(payload);
     const link = `${window.location.origin}/r/${b64}`;
@@ -109,6 +144,9 @@ function CreateWizardInner() {
     setPublished(null);
     setWizStep(0);
     setDraft({ ...EMPTY_DRAFT, plan: "free" });
+    setSynastry(null);
+    setSynastryStatus("idle");
+    setSynastryError(null);
   }
 
   if (published) {
@@ -243,7 +281,7 @@ function CreateWizardInner() {
                 active={draft.plan === "premium"}
                 title="Premium ✦"
                 price={`${PLAN_PRICING.premium.ars} ARS · ≈${PLAN_PRICING.premium.usd} (demo)`}
-                features={["Los 5 temas", "Foto + canción", "Constelación + estadísticas", "Cápsula del tiempo", "Sin marca de agua"]}
+                features={["Los 5 temas", "Foto + canción", "Constelación + estadísticas", "Cápsula del tiempo", "Sinastría con IA", "Sin marca de agua"]}
                 onSelect={() => update("plan", "premium")}
                 variant="gold"
               />
@@ -326,6 +364,62 @@ function CreateWizardInner() {
               </div>
             )}
 
+            {draft.plan === "premium" && (
+              <div className="mt-7 border-t border-line pt-6">
+                <h3 className="text-[16px] text-text">✦ Sinastría con IA</h3>
+                <p className="mt-1.5 text-[13px] text-text-soft">
+                  Calculamos las cartas natales reales de los dos (posiciones astronómicas de
+                  verdad) y una IA escribe una lectura de compatibilidad a partir de esos datos.
+                  Es para divertirse, no una predicción seria.
+                </p>
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <BirthFieldGroup
+                    label={draft.from || "De"}
+                    value={draft.birthA}
+                    onChange={(v) => update("birthA", v)}
+                  />
+                  <BirthFieldGroup
+                    label={draft.to || "Para"}
+                    value={draft.birthB}
+                    onChange={(v) => update("birthB", v)}
+                  />
+                </div>
+
+                {synastry ? (
+                  <div className="mt-4 rounded-[12px] border border-gold/30 bg-gold/[0.06] p-4">
+                    <p className="text-[13px] text-text-soft leading-[1.6]">{synastry.text}</p>
+                    <button
+                      type="button"
+                      onClick={() => setSynastry(null)}
+                      className="mt-2 text-[12px] text-text-faint underline underline-offset-4"
+                    >
+                      Generar de nuevo
+                    </button>
+                  </div>
+                ) : (
+                  <div className="mt-4">
+                    <Button
+                      variant="gold"
+                      size="sm"
+                      onClick={generateSynastry}
+                      disabled={
+                        synastryStatus === "loading" ||
+                        !draft.birthA.date ||
+                        !draft.birthA.place ||
+                        !draft.birthB.date ||
+                        !draft.birthB.place
+                      }
+                    >
+                      {synastryStatus === "loading" ? "Consultando las estrellas…" : "✦ Generar sinastría"}
+                    </Button>
+                    {synastryError && (
+                      <p className="mt-2 text-[12.5px] text-error">{synastryError}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
             <Nav onBack={prev} onNext={next} />
           </>
         )}
@@ -388,6 +482,45 @@ function CreateWizardInner() {
           </>
         )}
       </div>
+    </div>
+  );
+}
+
+function BirthFieldGroup({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: BirthInfo;
+  onChange: (v: BirthInfo) => void;
+}) {
+  return (
+    <div className="rounded-[12px] border border-line-strong p-3.5">
+      <div className="text-[12.5px] font-semibold text-text-soft mb-2">{label}</div>
+      <Field label="Fecha de nacimiento">
+        <Input type="date" value={value.date} onChange={(e) => onChange({ ...value, date: e.target.value })} />
+      </Field>
+      <label className="mt-2.5 flex items-center gap-2 text-[12.5px] text-text-soft">
+        <input
+          type="checkbox"
+          checked={value.timeKnown}
+          onChange={(e) => onChange({ ...value, timeKnown: e.target.checked })}
+        />
+        Sé la hora exacta
+      </label>
+      {value.timeKnown && (
+        <Field label="Hora de nacimiento">
+          <Input type="time" value={value.time} onChange={(e) => onChange({ ...value, time: e.target.value })} />
+        </Field>
+      )}
+      <Field label="Lugar de nacimiento">
+        <Input
+          value={value.place}
+          onChange={(e) => onChange({ ...value, place: e.target.value })}
+          placeholder="Ciudad, país"
+        />
+      </Field>
     </div>
   );
 }
