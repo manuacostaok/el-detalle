@@ -26,7 +26,7 @@ export default function PageDetail() {
       <Container className="py-16 text-center">
         <p className="text-text-soft">No encontramos esa página.</p>
         <Link href="/app" className="mt-3 inline-block underline underline-offset-4">
-          Volver a mis páginas
+          Volver a mis detalles
         </Link>
       </Container>
     );
@@ -35,7 +35,7 @@ export default function PageDetail() {
   return (
     <Container className="py-12 grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-10">
       <div>
-        <Eyebrow>{page.payload.plan === "premium" ? "Plan Premium" : "Plan Básico"}</Eyebrow>
+        <Eyebrow>{page.payload.plan === "premium" ? "Edición Especial" : "Clásico"}</Eyebrow>
         <h1 className="mt-2 text-[26px]">{page.payload.title || "Tu página"}</h1>
         <p className="mt-1 text-[14px] text-text-faint">
           Creada el {new Date(page.createdAt).toLocaleDateString("es-AR")} · {page.viewCount} vistas

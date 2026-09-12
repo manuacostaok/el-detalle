@@ -25,9 +25,9 @@ export default function AdminUsers() {
                 <td className="py-3 px-4 text-text-soft">{u.email}</td>
                 <td className="py-3 px-4">
                   {u.plan === "premium" ? (
-                    <span className="text-gold-soft">Premium</span>
+                    <span className="text-gold-soft">Edición Especial</span>
                   ) : (
-                    <span className="text-text-soft">Básico</span>
+                    <span className="text-text-soft">Clásico</span>
                   )}
                 </td>
                 <td className="py-3 px-4 text-text-faint">{u.createdAt}</td>

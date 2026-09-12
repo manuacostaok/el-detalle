@@ -10,7 +10,7 @@ type HeartMarkProps = {
   animate?: boolean;
 };
 
-/** Dos mitades que forman un corazón — la marca de Un Detalle. */
+/** Dos mitades que forman un corazón — la marca de El Detalle. */
 export function HeartMark({
   className,
   leftFill = "var(--color-accent)",

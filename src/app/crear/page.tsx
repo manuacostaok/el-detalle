@@ -70,7 +70,7 @@ function CreateWizardInner() {
   const [draft, setDraft] = useState<Draft>({ ...EMPTY_DRAFT, plan: initialPlan });
   const [wizStep, setWizStep] = useState(0);
   const [photoStatus, setPhotoStatus] = useState<string | null>(null);
-  const [published, setPublished] = useState<{ link: string; b64Length: number; saved: boolean } | null>(null);
+  const [published, setPublished] = useState<{ link: string; b64Length: number; saved: boolean; to: string } | null>(null);
   const [synastry, setSynastry] = useState<SynastryResult | null>(null);
   const [synastryStatus, setSynastryStatus] = useState<"idle" | "loading" | "error">("idle");
   const [synastryError, setSynastryError] = useState<string | null>(null);
@@ -193,7 +193,7 @@ function CreateWizardInner() {
       createPage(user.id, payload);
       saved = true;
     }
-    setPublished({ link, b64Length: b64.length, saved });
+    setPublished({ link, b64Length: b64.length, saved, to: payload.to });
   }
 
   function reset() {
@@ -208,7 +208,15 @@ function CreateWizardInner() {
   }
 
   if (published) {
-    return <ShareScreen link={published.link} b64Length={published.b64Length} saved={published.saved} onCreateAnother={reset} />;
+    return (
+      <ShareScreen
+        link={published.link}
+        b64Length={published.b64Length}
+        saved={published.saved}
+        recipientName={published.to}
+        onCreateAnother={reset}
+      />
+    );
   }
 
   const key = WIZ_STEPS[wizStep];
@@ -247,7 +255,7 @@ function CreateWizardInner() {
         {key === "ocasion" && (
           <>
             <StepLabel n={1} />
-            <h2 className="text-[25px]">¿Para quién es esta página?</h2>
+            <h2 className="text-[25px]">¿Para quién es este detalle?</h2>
             <p className="mt-2 text-[14px] text-text-soft">
               Esto define el tono del mensaje sugerido y el nombre del contador.
             </p>
@@ -315,7 +323,7 @@ function CreateWizardInner() {
         {key === "plan" && (
           <>
             <StepLabel n={4} />
-            <h2 className="text-[25px]">Elegí un plan</h2>
+            <h2 className="text-[25px]">¿Qué tan especial va a ser el detalle?</h2>
             <p className="mt-2 text-[14px] text-text-soft">
               Esto es una demo: el botón todavía no cobra de verdad, solo activa las funciones
               del plan para que veas la diferencia (ver BACKEND.md para la integración real de
@@ -324,7 +332,7 @@ function CreateWizardInner() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-[18px]">
               <PlanCard
                 active={draft.plan === "free"}
-                title="Básico"
+                title="Clásico"
                 price={`${PLAN_PRICING.free.ars} ARS · ≈${PLAN_PRICING.free.usd} (demo)`}
                 features={["3 temas visuales", "Contador y mensaje", "Canción", "Fondo con fotos pasando", "Con marca de agua"]}
                 onSelect={() => {
@@ -336,7 +344,7 @@ function CreateWizardInner() {
               />
               <PlanCard
                 active={draft.plan === "premium"}
-                title="Premium ✦"
+                title="Edición Especial ✦"
                 price={`${PLAN_PRICING.premium.ars} ARS · ≈${PLAN_PRICING.premium.usd} (demo)`}
                 features={["Los 5 temas", "Foto destacada", "Cronología de fotos", "Constelación + estadísticas", "Cápsula del tiempo", "Sinastría con IA", "Sin marca de agua"]}
                 onSelect={() => update("plan", "premium")}
@@ -352,8 +360,9 @@ function CreateWizardInner() {
             <StepLabel n={5} />
             <h2 className="text-[25px]">Una canción y una foto</h2>
             <p className="mt-2 text-[14px] text-text-soft">
-              La canción está incluida en los dos planes. La foto destacada es exclusiva de
-              Premium — se guarda dentro del link, así que la comprimimos automáticamente.
+              La canción está incluida en los dos planes. La foto destacada es exclusiva de la
+              Edición Especial — se guarda dentro del link, así que la comprimimos
+              automáticamente.
             </p>
             <Field label="Link de YouTube">
               <Input
@@ -363,7 +372,7 @@ function CreateWizardInner() {
                 placeholder="https://youtube.com/watch?v=..."
               />
             </Field>
-            <Field label={PLAN_FEATURES[draft.plan].photo ? "Foto destacada" : "Foto destacada — Premium"}>
+            <Field label={PLAN_FEATURES[draft.plan].photo ? "Foto destacada" : "Foto destacada — Edición Especial"}>
               {draft.photo ? (
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -576,7 +585,7 @@ function CreateWizardInner() {
             <StepLabel n={6} />
             <h2 className="text-[25px]">Elegí un tema visual</h2>
             <p className="mt-2 text-[14px] text-text-soft">
-              Así se va a ver la página que reciba {draft.to || "la otra persona"}.
+              Así se va a ver el detalle que reciba {draft.to || "la otra persona"}.
             </p>
             <div className="mt-3 grid grid-cols-3 sm:grid-cols-5 gap-3">
               {THEMES.map((t) => {
@@ -617,15 +626,14 @@ function CreateWizardInner() {
             <div className="font-mono text-[11.5px] text-text-faint text-center mb-2">
               Vista previa
             </div>
-            <h2 className="text-[25px]">Así se va a ver</h2>
+            <h2 className="text-[25px]">Así se va a ver el detalle</h2>
             <p className="mt-2 text-[14px] text-text-soft">
-              Revisá todo antes de publicar — después vas a poder copiar el link y descargar el
-              QR.
+              Revisalo antes de sellarlo — después vas a poder copiar el link y descargar el QR.
             </p>
             <div className="mt-5">
               <GiftCard payload={previewPayload} compact />
             </div>
-            <Nav onBack={prev} nextLabel="Publicar mi página" onFinish={publish} />
+            <Nav onBack={prev} nextLabel="Sellar mi detalle ✦" onFinish={publish} />
           </>
         )}
       </div>

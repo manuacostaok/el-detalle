@@ -12,9 +12,13 @@ export function SynastryCard({
   return (
     <div className="rounded-[22px] border border-line bg-surface p-7">
       <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-gold-soft">
-        Su sinastría
+        04 · Lo que dicen las estrellas
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-3 text-[13px]">
+
+      <div className="mt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-faint">
+        Sus cartas — datos reales
+      </div>
+      <div className="mt-2.5 grid grid-cols-2 gap-3 text-[13px]">
         <div className="rounded-[12px] bg-ground/60 border border-line px-3.5 py-3">
           <div className="text-text-faint text-[11px] uppercase tracking-wide">{from}</div>
           <div className="mt-1 text-text">☉ {synastry.sunA} · ☾ {synastry.moonA}</div>
@@ -26,7 +30,11 @@ export function SynastryCard({
           {synastry.risingB && <div className="text-text-soft">↑ {synastry.risingB}</div>}
         </div>
       </div>
-      <p className="mt-4 text-[14.5px] leading-[1.7] text-text-soft whitespace-pre-wrap">
+
+      <div className="mt-5 font-mono text-[10px] uppercase tracking-[0.12em] text-text-faint">
+        Lo que significa
+      </div>
+      <p className="mt-2.5 text-[14.5px] leading-[1.7] text-text-soft whitespace-pre-wrap">
         {synastry.text}
       </p>
       <p className="mt-4 text-[11px] text-text-faint">

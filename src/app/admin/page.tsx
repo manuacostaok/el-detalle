@@ -9,7 +9,7 @@ export default function AdminOverview() {
   const tiles = [
     { label: "Usuarios", value: summary.totalUsers },
     { label: "Páginas creadas", value: summary.totalPages },
-    { label: "Páginas Premium", value: summary.premiumPages },
+    { label: "Edición Especial", value: summary.premiumPages },
     { label: "Vistas totales", value: summary.totalViews.toLocaleString("es-AR") },
   ];
 

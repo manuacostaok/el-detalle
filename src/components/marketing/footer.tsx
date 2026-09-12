@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { HeartMark } from "@/components/ui/heart-mark";
+import { SealMark } from "@/components/ui/seal-mark";
 
 const COLUMNS = [
   {
@@ -29,9 +29,9 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-2.5 font-serif text-[19px] font-semibold text-text">
             <span className="block w-[22px] h-[22px] shrink-0">
-              <HeartMark />
+              <SealMark />
             </span>
-            Un Detalle
+            El Detalle
           </div>
           <p className="mt-4 max-w-[32ch] text-[13.5px] text-text-faint">
             El gesto de amor que se regala con un link — contador en vivo, mensaje y hasta
@@ -59,7 +59,7 @@ export function Footer() {
         ))}
       </Container>
       <Container className="pb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[12.5px] text-text-faint">
-        <span>© {new Date().getFullYear()} Un Detalle — gestos de amor para regalar.</span>
+        <span>© {new Date().getFullYear()} El Detalle — gestos de amor para regalar.</span>
         <span>Hecho en Argentina 💞</span>
       </Container>
     </footer>

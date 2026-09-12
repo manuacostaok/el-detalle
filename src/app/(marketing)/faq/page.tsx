@@ -18,7 +18,7 @@ const FAQ_GROUPS = [
       },
       {
         q: "¿Puedo editar la página después de publicarla?",
-        a: "Si la guardaste en tu cuenta, sí — desde \"Mis páginas\" podés volver a abrir el wizard con los mismos datos y republicar. Si la creaste sin cuenta, el link original queda fijo: para cambiar algo tenés que crear una página nueva.",
+        a: "Si la guardaste en tu cuenta, sí — desde \"Mis detalles\" podés volver a abrir el wizard con los mismos datos y republicar. Si la creaste sin cuenta, el link original queda fijo: para cambiar algo tenés que preparar un detalle nuevo.",
       },
       {
         q: "¿Qué pasa si mi mensaje es muy largo?",
@@ -51,8 +51,8 @@ const FAQ_GROUPS = [
         a: "No, es un pago único por página. Ver el detalle completo en la página de precios.",
       },
       {
-        q: "¿Qué diferencia hay entre Básico y Premium?",
-        a: "Básico incluye 3 temas visuales, contador, mensaje, una canción y un fondo con hasta 3 fotos pasando, con una marca de agua sutil. Premium suma los 5 temas, una foto destacada, una cronología de hasta 5 momentos, constelación, estadísticas, cápsula del tiempo, sinastría con IA, y quita la marca de agua.",
+        q: "¿Qué diferencia hay entre Clásico y Edición Especial?",
+        a: "Clásico incluye 3 temas visuales, contador, mensaje, una canción y un fondo con hasta 3 fotos pasando, con una marca de agua sutil. Edición Especial suma los 5 temas, una foto destacada, una cronología de hasta 5 momentos, constelación, estadísticas, cápsula del tiempo, sinastría con IA, y quita la marca de agua.",
       },
     ],
   },

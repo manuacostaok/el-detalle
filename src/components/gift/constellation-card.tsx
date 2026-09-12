@@ -14,7 +14,7 @@ export function ConstellationCard({
       </div>
       <div className="relative">
         <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-gold-soft/80">
-          Su constelación
+          03 · Su universo
         </div>
         <p className="mt-3 text-[14px] leading-[1.6] text-text-soft/90 max-w-[38ch] mx-auto">
           Única para {from} y {to} — generada a partir de sus nombres, como una huella

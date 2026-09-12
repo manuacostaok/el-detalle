@@ -5,7 +5,7 @@ import type { GiftPagePayload } from "@/lib/domain";
 import { getOccasion } from "@/lib/domain";
 import { GIFT_THEME_STYLES } from "@/lib/gift-theme-styles";
 import { GiftCard } from "@/components/gift/gift-card";
-import { RevealOverlay } from "@/components/gift/reveal-overlay";
+import { EnvelopeReveal } from "@/components/gift/envelope-reveal";
 import { FloatEmoji } from "@/components/gift/float-emoji";
 import { ConstellationCard } from "@/components/gift/constellation-card";
 import { LoveStats } from "@/components/gift/love-stats";
@@ -26,21 +26,21 @@ export function GiftViewer({ payload }: { payload: GiftPagePayload }) {
       style={hasBackgroundPhotos ? undefined : { background: style.background }}
     >
       {hasBackgroundPhotos && <BackgroundPhotoCarousel photos={payload.backgroundPhotos!} />}
-      <RevealOverlay />
+      <EnvelopeReveal recipientName={payload.to} />
       <FloatEmoji emoji={occasion.emoji} />
       <div className="relative z-10 mx-auto flex w-full max-w-[460px] flex-col gap-6">
         <GiftCard payload={payload} live />
-        {isPremium && (
-          <>
-            <ConstellationCard from={payload.from} to={payload.to} />
-            <LoveStats date={payload.date} />
-          </>
-        )}
         {payload.timeline && payload.timeline.length > 0 && (
           <PhotoTimeline entries={payload.timeline} />
         )}
-        {payload.synastry && (
-          <SynastryCard synastry={payload.synastry} from={payload.from} to={payload.to} />
+        {isPremium && (
+          <>
+            <ConstellationCard from={payload.from} to={payload.to} />
+            {payload.synastry && (
+              <SynastryCard synastry={payload.synastry} from={payload.from} to={payload.to} />
+            )}
+            <LoveStats date={payload.date} />
+          </>
         )}
         {payload.futureLetter && (
           <FutureLetter

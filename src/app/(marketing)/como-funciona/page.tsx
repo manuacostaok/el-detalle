@@ -19,7 +19,7 @@ const DETAILED_STEPS = [
   {
     num: "02",
     title: "Sumá una canción y fotos (opcional)",
-    body: "La canción está en los dos planes — un link de YouTube que se muestra como botón. Las fotos de fondo también están en Básico; con Premium sumás una foto destacada en la tarjeta y una cronología de varios momentos.",
+    body: "La canción está en los dos planes — un link de YouTube que se muestra como botón. Las fotos de fondo también están en el Clásico; con la Edición Especial sumás una foto destacada en la tarjeta y una cronología de varios momentos.",
   },
   {
     num: "03",
@@ -29,7 +29,7 @@ const DETAILED_STEPS = [
   {
     num: "04",
     title: "Publicá y compartí el link o el QR",
-    body: "Tu página queda lista al instante, en un link único que no depende de ningún servidor — funciona para siempre, aunque Un Detalle deje de existir. Descargá el QR para imprimir en una tarjeta, un llavero o mandalo directo por WhatsApp.",
+    body: "Tu página queda lista al instante, en un link único que no depende de ningún servidor — funciona para siempre, aunque El Detalle deje de existir. Descargá el QR para imprimir en una tarjeta, un llavero o mandalo directo por WhatsApp.",
   },
 ];
 
@@ -105,7 +105,7 @@ export default function ComoFuncionaPage() {
                   <div className="flex items-center justify-between">
                     <h4 className="text-[15px] font-semibold">{t.label}</h4>
                     {t.premium && (
-                      <span className="font-mono text-[10px] text-gold-soft">Premium</span>
+                      <span className="font-mono text-[10px] text-gold-soft">Especial</span>
                     )}
                   </div>
                   <p className="mt-1.5 text-[13px] text-text-faint">{t.description}</p>

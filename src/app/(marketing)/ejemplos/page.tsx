@@ -15,7 +15,7 @@ export default function EjemplosPage() {
       <Container className="py-16 sm:py-20">
         <Eyebrow>Ejemplos</Eyebrow>
         <h1 className="mt-3 max-w-[680px] text-[clamp(30px,4.5vw,46px)] leading-[1.1]">
-          Páginas reales, hechas con Un Detalle.
+          Páginas reales, hechas con El Detalle.
         </h1>
         <p className="mt-4 max-w-[56ch] text-[16px] text-text-soft">
           Cada tarjeta de acá abajo es una página funcional de verdad — hacé clic para abrirla

@@ -32,7 +32,7 @@ export function OccasionThemeShowcase({
           >
             {t.premium && (
               <span className="absolute top-2.5 right-2.5 rounded-full bg-gold px-2 py-0.5 font-mono text-[9px] font-bold text-ink">
-                Premium
+                Especial
               </span>
             )}
             <div

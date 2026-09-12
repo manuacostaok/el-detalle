@@ -21,19 +21,19 @@ export default function DashboardPage() {
 
   return (
     <Container className="py-12">
-      <Eyebrow>Mis páginas</Eyebrow>
+      <Eyebrow>Mis detalles</Eyebrow>
       <h1 className="mt-2 text-[28px]">
-        {pages.length === 0 ? "Todavía no creaste ninguna" : `${pages.length} página${pages.length === 1 ? "" : "s"}`}
+        {pages.length === 0 ? "Todavía no preparaste ninguno" : `${pages.length} detalle${pages.length === 1 ? "" : "s"}`}
       </h1>
 
       {pages.length === 0 ? (
         <div className="mt-10 rounded-[18px] border border-dashed border-line-strong p-10 text-center">
           <p className="text-[15px] text-text-soft">
-            Cuando publiques una página estando conectado, va a aparecer acá para que puedas
-            volver a verla, copiar el link o editarla.
+            Cuando sellés un detalle estando conectado, va a aparecer acá para que puedas
+            volver a verlo, copiar el link o editarlo.
           </p>
           <Button href="/crear" className="mt-5">
-            Crear mi primera página
+            Preparar mi primer detalle
           </Button>
         </div>
       ) : (

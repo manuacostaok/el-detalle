@@ -7,7 +7,7 @@ export function LoveStats({ date }: { date: string }) {
   return (
     <div className="rounded-[22px] border border-line bg-surface p-7">
       <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-gold-soft">
-        En números
+05 · Sus números
       </div>
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3.5">
         {stats.map((s) => (

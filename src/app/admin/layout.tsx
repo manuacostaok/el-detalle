@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HeartMark } from "@/components/ui/heart-mark";
+import { SealMark } from "@/components/ui/seal-mark";
 import { Container } from "@/components/ui/container";
 
 const NAV = [
@@ -15,9 +15,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Container className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-4">
           <Link href="/" className="flex items-center gap-2.5 font-serif text-[18px] font-semibold text-text">
             <span className="block w-5 h-5 shrink-0">
-              <HeartMark />
+              <SealMark />
             </span>
-            Un Detalle <span className="font-mono text-[11px] text-text-faint">/admin</span>
+            El Detalle <span className="font-mono text-[11px] text-text-faint">/admin</span>
           </Link>
           <nav className="flex items-center gap-5 sm:gap-6 text-[13.5px] text-text-soft">
             {NAV.map((item) => (

@@ -21,30 +21,22 @@ const plexMono = IBM_Plex_Mono({
   weight: ["500", "600"],
 });
 
-const siteUrl = "https://undetalle.app";
+const siteUrl = "https://eldetalle.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Un Detalle — el gesto de amor que se regala con un link",
-    template: "%s · Un Detalle",
+    default: "El Detalle — el gesto de amor que se regala con un link",
+    template: "%s · El Detalle",
   },
   description:
     "Un regalo digital de verdad: contador en vivo, tu mensaje y hasta las estrellas de los dos, envuelto en un link o un QR. Para pareja, amigos, familia o mascota. Sin apps, sin cuentas para verla.",
   openGraph: {
-    title: "Un Detalle",
+    title: "El Detalle",
     description: "El gesto que se abre con un clic — con QR para regalar de verdad.",
     type: "website",
     locale: "es_AR",
     url: siteUrl,
-  },
-  icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon.ico" },
-    ],
-    apple: "/favicon-180.png",
   },
 };
 

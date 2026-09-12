@@ -31,9 +31,9 @@ export default function AdminPages() {
                 <td className="py-3 px-4 text-text-soft">{getTheme(p.theme).label}</td>
                 <td className="py-3 px-4 text-text-soft">
                   {p.plan === "premium" ? (
-                    <span className="text-gold-soft">Premium</span>
+                    <span className="text-gold-soft">Edición Especial</span>
                   ) : (
-                    "Básico"
+                    "Clásico"
                   )}
                 </td>
                 <td className="py-3 px-4 text-text-faint">{p.createdAt}</td>

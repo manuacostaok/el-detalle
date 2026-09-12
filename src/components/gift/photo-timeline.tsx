@@ -6,7 +6,7 @@ export function PhotoTimeline({ entries }: { entries: TimelineEntry[] }) {
   return (
     <div className="rounded-[22px] border border-line bg-surface p-7">
       <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-gold-soft">
-        Su cronología
+02 · Sus momentos
       </div>
       <div className="mt-5 flex flex-col gap-6">
         {entries.map((entry, i) => (

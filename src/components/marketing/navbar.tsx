@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSession } from "@/lib/mock/auth";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
-import { HeartMark } from "@/components/ui/heart-mark";
+import { SealMark } from "@/components/ui/seal-mark";
 
 const LINKS = [
   { href: "/como-funciona", label: "Cómo funciona" },
@@ -20,9 +20,9 @@ export function Navbar() {
       <Container className="flex items-center justify-between py-5">
         <Link href="/" className="flex items-center gap-2.5 font-serif text-[21px] font-semibold text-text">
           <span className="block w-[25px] h-[25px] shrink-0">
-            <HeartMark />
+            <SealMark />
           </span>
-          Un Detalle
+          El Detalle
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-[14px] text-text-soft">
           {LINKS.map((link) => (
@@ -34,7 +34,7 @@ export function Navbar() {
         <div className="flex items-center gap-2 xs:gap-3">
           {user && user !== "loading" ? (
             <Button href="/app" variant="ghost" size="sm" className="hidden xs:inline-flex">
-              Mis páginas
+              Mis detalles
             </Button>
           ) : (
             <Link
@@ -45,7 +45,7 @@ export function Navbar() {
             </Link>
           )}
           <Button href="/crear" size="sm" className="whitespace-nowrap">
-            <span className="hidden xs:inline">Crear mi página</span>
+            <span className="hidden xs:inline">Crear mi detalle</span>
             <span className="xs:hidden">Crear</span>
           </Button>
         </div>

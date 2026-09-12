@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { HeartMark } from "@/components/ui/heart-mark";
+import { SealMark } from "@/components/ui/seal-mark";
 import { QrCode } from "@/components/ui/qr-code";
 import { Eyebrow } from "@/components/ui/container";
 
@@ -11,16 +11,21 @@ export function ShareScreen({
   link,
   b64Length,
   saved,
+  recipientName,
   onCreateAnother,
 }: {
   link: string;
   b64Length: number;
   saved: boolean;
+  recipientName: string;
   onCreateAnother: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const qrWrapRef = useRef<HTMLDivElement>(null);
   const heavy = b64Length > 1400;
+
+  const whatsappMessage = `Te preparé algo especial ❤️ Abrilo cuando tengas un momento a solas: ${link}`;
+  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
 
   async function handleCopy() {
     try {
@@ -40,7 +45,7 @@ export function ShareScreen({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "soulmates-qr.png";
+      a.download = "el-detalle-qr.png";
       a.click();
       URL.revokeObjectURL(url);
     }, "image/png");
@@ -48,14 +53,16 @@ export function ShareScreen({
 
   return (
     <div className="mx-auto max-w-[520px] px-6 py-16 text-center">
-      <div className="mx-auto w-[34px] h-[34px]">
-        <HeartMark animate />
+      <div className="mx-auto w-[42px] h-[42px]">
+        <SealMark />
       </div>
-      <Eyebrow className="mt-4">Publicada</Eyebrow>
-      <h2 className="mt-2 text-[26px]">Tu página ya existe.</h2>
+      <Eyebrow className="mt-4">Listo para entregar</Eyebrow>
+      <h2 className="mt-2 text-[26px]">
+        El detalle para {recipientName || "esa persona"} ya está sellado.
+      </h2>
       <p className="mt-2 text-[14.5px] text-text-soft">
-        Compartí el link o descargá el código QR. No hace falta que nadie inicie sesión para
-        verla.
+        Guardalo, imprimí el QR, o entregalo ahora mismo. No hace falta que nadie inicie
+        sesión para abrirlo.
       </p>
 
       <div
@@ -68,7 +75,7 @@ export function ShareScreen({
       {heavy && (
         <div className="mt-3.5 rounded-[10px] border border-gold/30 bg-gold/10 px-3.5 py-2.5 text-[12.5px] text-gold-soft">
           ⚠️ Con la foto incluida, el link es largo y el QR queda muy denso — puede costarle a
-          algunos celulares escanearlo. Si falla, compartí el link directo.
+          algunos celulares escanearlo. Si falla, entregalo por link directo.
         </div>
       )}
 
@@ -85,21 +92,28 @@ export function ShareScreen({
       </div>
 
       <div className="mt-5 flex flex-wrap justify-center gap-3">
-        <Button onClick={handleDownload}>Descargar QR</Button>
-        <Button href={link} variant="ghost" target="_blank">
-          Ver la página →
+        <Button href={whatsappHref} target="_blank" rel="noopener noreferrer">
+          Entregar por WhatsApp
+        </Button>
+        <Button onClick={handleDownload} variant="ghost">
+          Descargar QR
+        </Button>
+      </div>
+      <div className="mt-3">
+        <Button href={link} variant="link" target="_blank">
+          Ver cómo va a quedar →
         </Button>
       </div>
 
       {saved && (
-        <p className="mt-4 text-[12.5px] text-text-faint">
-          Se guardó en <Link href="/app" className="underline underline-offset-4">tu cuenta</Link>.
+        <p className="mt-5 text-[12.5px] text-text-faint">
+          Se guardó en <Link href="/app" className="underline underline-offset-4">tus detalles</Link>.
         </p>
       )}
 
       <div className="mt-8">
         <button type="button" onClick={onCreateAnother} className="text-[14px] text-text-soft underline underline-offset-4 hover:text-text">
-          Crear otra página
+          Preparar otro detalle
         </button>
       </div>
     </div>

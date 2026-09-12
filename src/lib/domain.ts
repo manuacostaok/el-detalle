@@ -124,8 +124,8 @@ export const PLAN_FEATURES: Record<
   PlanKey,
   { photo: boolean; song: boolean; watermark: boolean; backgroundPhotos: boolean; timeline: boolean; label: string }
 > = {
-  free: { photo: false, song: true, watermark: true, backgroundPhotos: true, timeline: false, label: "Básico" },
-  premium: { photo: true, song: true, watermark: false, backgroundPhotos: true, timeline: true, label: "Premium" },
+  free: { photo: false, song: true, watermark: true, backgroundPhotos: true, timeline: false, label: "Clásico" },
+  premium: { photo: true, song: true, watermark: false, backgroundPhotos: true, timeline: true, label: "Edición Especial" },
 };
 
 export const PLAN_PRICING: Record<

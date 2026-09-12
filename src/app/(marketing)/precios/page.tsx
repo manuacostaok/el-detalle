@@ -7,7 +7,7 @@ import { RevealSection } from "@/components/motion/reveal-section";
 export const metadata: Metadata = {
   title: "Precio",
   description:
-    "Un pago único, sin suscripciones. Básico $10.000 ARS o Premium $25.000 ARS — el link queda activo para siempre.",
+    "Un pago único, sin suscripciones. Clásico $10.000 ARS o Edición Especial $25.000 ARS — el link queda activo para siempre.",
 };
 
 const FAQ_PRICING = [
@@ -21,7 +21,7 @@ const FAQ_PRICING = [
   },
   {
     q: "¿Qué pasa si la página deja de existir?",
-    a: "No depende de que Un Detalle siga activo: todos los datos de tu página viven codificados en el link mismo, así que sigue funcionando aunque el sitio original cambie.",
+    a: "No depende de que El Detalle siga activo: todos los datos de tu página viven codificados en el link mismo, así que sigue funcionando aunque el sitio original cambie.",
   },
 ];
 
@@ -44,7 +44,7 @@ export default function PreciosPage() {
         <Container>
           <RevealSection className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-[18px] rounded-[20px] border border-line bg-surface p-8">
-              <h3 className="text-[20px]">Básico</h3>
+              <h3 className="text-[20px]">Clásico</h3>
               <div className="font-mono text-[38px] text-text">
                 $10.000<span className="text-[14px] text-text-faint"> ARS pago único · ≈US$7</span>
               </div>
@@ -54,10 +54,10 @@ export default function PreciosPage() {
                 <li>✓ Una canción</li>
                 <li>✓ Fondo con hasta 3 fotos pasando</li>
                 <li>✓ Link y QR para compartir</li>
-                <li>✓ Marca de agua «Hecho con Un Detalle»</li>
+                <li>✓ Marca de agua «Hecho con El Detalle»</li>
               </ul>
               <Button href="/crear?plan=free" variant="ghost" block>
-                Crear con Básico
+                Preparar el Clásico
               </Button>
             </div>
 
@@ -65,12 +65,12 @@ export default function PreciosPage() {
               <span className="absolute -top-3 right-6 rounded-full bg-gold px-3 py-1 font-mono text-[10.5px] font-bold text-ink">
                 Más elegido
               </span>
-              <h3 className="text-[20px]">Premium</h3>
+              <h3 className="text-[20px]">Edición Especial</h3>
               <div className="font-mono text-[38px] text-text">
                 $25.000<span className="text-[14px] text-text-faint"> ARS pago único · ≈US$17</span>
               </div>
               <ul className="flex flex-col gap-2.5 text-[14px] text-text-soft">
-                <li>✓ Todo lo del plan Básico</li>
+                <li>✓ Todo lo del plan Clásico</li>
                 <li>✓ Los 5 temas, incluidos Nocturno y Divertido</li>
                 <li>✓ Una foto destacada en la tarjeta</li>
                 <li>✓ Cronología: hasta 5 momentos con foto, fecha y texto</li>
@@ -80,7 +80,7 @@ export default function PreciosPage() {
                 <li>✓ Sin marca de agua</li>
               </ul>
               <Button href="/crear?plan=premium" variant="gold" block>
-                Crear con Premium
+                Preparar la Edición Especial
               </Button>
               <div className="font-mono text-[12.5px] text-text-faint">
                 Costo de mantener cada página: prácticamente $0.

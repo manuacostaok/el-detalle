@@ -118,7 +118,7 @@ export function GiftCard({
         <span>De {payload.from || "alguien"}</span>
         {payload.plan === "free" ? (
           <span className="font-semibold" style={{ color: style.accent }}>
-            Hecho con Un Detalle 💞
+            Hecho con El Detalle 💞
           </span>
         ) : (
           <span>

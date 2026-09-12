@@ -130,7 +130,7 @@ export default function LandingPage() {
                 <tr>
                   <th className="text-left border-b border-line py-3.5 px-0" />
                   <th className="text-left border-b border-line py-3.5 px-4 font-mono text-[12px] uppercase tracking-[0.06em] text-text-faint font-semibold">
-                    Un Detalle
+                    El Detalle
                   </th>
                   <th className="text-left border-b border-line py-3.5 px-4 font-mono text-[12px] uppercase tracking-[0.06em] text-text-faint font-semibold">
                     La mayoría de las otras

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SealMark } from "@/components/ui/seal-mark";
 
 function daysUntil(dateStr: string): number {
   const target = new Date(dateStr + "T00:00:00");
@@ -22,12 +23,15 @@ export function FutureLetter({
   return (
     <div className="rounded-[22px] border border-dashed border-gold/40 bg-gold/[0.06] p-7 text-center">
       <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-gold-soft">
-        Cápsula del tiempo
+        06 · Lo que todavía no pasó
       </div>
       {!unlocked ? (
         <>
+          <div className="mx-auto mt-4 w-[38px] h-[38px] opacity-90">
+            <SealMark className="w-full h-full" />
+          </div>
           <p className="mt-3 text-[15px] text-text">
-            Hay una carta más, guardada para el{" "}
+            Hay una carta más, sellada, guardada para el{" "}
             {new Date(unlockDate + "T00:00:00").toLocaleDateString("es-AR", {
               day: "numeric",
               month: "long",
