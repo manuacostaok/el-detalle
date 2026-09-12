@@ -18,8 +18,8 @@ const DETAILED_STEPS = [
   },
   {
     num: "02",
-    title: "Sumá una foto y una canción (opcional)",
-    body: "Si elegís el plan Premium, podés agregar una foto — se comprime automáticamente para que el link no quede pesado — y un link de YouTube que se muestra como un botón para escuchar la canción que representa ese vínculo.",
+    title: "Sumá una canción y fotos (opcional)",
+    body: "La canción está en los dos planes — un link de YouTube que se muestra como botón. Las fotos de fondo también están en Básico; con Premium sumás una foto destacada en la tarjeta y una cronología de varios momentos.",
   },
   {
     num: "03",

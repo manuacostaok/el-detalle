@@ -51,6 +51,8 @@ export default function PreciosPage() {
               <ul className="flex flex-col gap-2.5 text-[14px] text-text-soft">
                 <li>✓ 3 temas visuales (Romántico, Boho, Minimal)</li>
                 <li>✓ Contador en vivo y mensaje</li>
+                <li>✓ Una canción</li>
+                <li>✓ Fondo con hasta 3 fotos pasando</li>
                 <li>✓ Link y QR para compartir</li>
                 <li>✓ Marca de agua «Hecho con Soulmates»</li>
               </ul>
@@ -70,7 +72,8 @@ export default function PreciosPage() {
               <ul className="flex flex-col gap-2.5 text-[14px] text-text-soft">
                 <li>✓ Todo lo del plan Básico</li>
                 <li>✓ Los 5 temas, incluidos Nocturno y Divertido</li>
-                <li>✓ Una foto y una canción</li>
+                <li>✓ Una foto destacada en la tarjeta</li>
+                <li>✓ Cronología: hasta 5 momentos con foto, fecha y texto</li>
                 <li>✓ Su propia constelación + estadísticas de la relación</li>
                 <li>✓ Cápsula del tiempo: una carta que se abre en el futuro</li>
                 <li>✓ Sinastría astrológica real, escrita con IA</li>

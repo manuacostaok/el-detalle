@@ -11,6 +11,8 @@ import { ConstellationCard } from "@/components/gift/constellation-card";
 import { LoveStats } from "@/components/gift/love-stats";
 import { FutureLetter } from "@/components/gift/future-letter";
 import { SynastryCard } from "@/components/gift/synastry-card";
+import { BackgroundPhotoCarousel } from "@/components/gift/background-photo-carousel";
+import { PhotoTimeline } from "@/components/gift/photo-timeline";
 
 export function GiftViewer({ payload }: { payload: GiftPagePayload }) {
   const style = GIFT_THEME_STYLES[payload.theme];
@@ -22,6 +24,9 @@ export function GiftViewer({ payload }: { payload: GiftPagePayload }) {
       className="relative min-h-screen overflow-x-hidden px-5 py-12"
       style={{ background: style.background }}
     >
+      {payload.backgroundPhotos && payload.backgroundPhotos.length > 0 && (
+        <BackgroundPhotoCarousel photos={payload.backgroundPhotos} />
+      )}
       <RevealOverlay />
       <FloatEmoji emoji={occasion.emoji} />
       <div className="relative z-[1] mx-auto flex w-full max-w-[460px] flex-col gap-6">
@@ -31,6 +36,9 @@ export function GiftViewer({ payload }: { payload: GiftPagePayload }) {
             <ConstellationCard from={payload.from} to={payload.to} />
             <LoveStats date={payload.date} />
           </>
+        )}
+        {payload.timeline && payload.timeline.length > 0 && (
+          <PhotoTimeline entries={payload.timeline} />
         )}
         {payload.synastry && (
           <SynastryCard synastry={payload.synastry} from={payload.from} to={payload.to} />

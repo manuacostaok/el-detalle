@@ -52,7 +52,7 @@ const FAQ_GROUPS = [
       },
       {
         q: "¿Qué diferencia hay entre Básico y Premium?",
-        a: "Básico incluye 3 temas visuales, contador y mensaje, con una marca de agua sutil. Premium suma los 5 temas, foto, canción y quita la marca de agua.",
+        a: "Básico incluye 3 temas visuales, contador, mensaje, una canción y un fondo con hasta 3 fotos pasando, con una marca de agua sutil. Premium suma los 5 temas, una foto destacada, una cronología de hasta 5 momentos, constelación, estadísticas, cápsula del tiempo, sinastría con IA, y quita la marca de agua.",
       },
     ],
   },

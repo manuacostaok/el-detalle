@@ -15,7 +15,8 @@ import { compressPhoto } from "@/lib/compress-photo";
 import { encodePayload } from "@/lib/payload";
 import { useSession } from "@/lib/mock/auth";
 import { createPage } from "@/lib/mock/pages";
-import type { SynastryResult } from "@/lib/domain";
+import type { SynastryResult, TimelineEntry } from "@/lib/domain";
+import { uploadPhoto } from "@/lib/upload-photo";
 
 type BirthInfo = { date: string; time: string; timeKnown: boolean; place: string };
 
@@ -36,6 +37,8 @@ type Draft = {
   futureLetterMessage: string;
   birthA: BirthInfo;
   birthB: BirthInfo;
+  backgroundPhotos: string[];
+  timeline: TimelineEntry[];
 };
 
 const EMPTY_DRAFT: Omit<Draft, "plan"> = {
@@ -52,7 +55,12 @@ const EMPTY_DRAFT: Omit<Draft, "plan"> = {
   futureLetterMessage: "",
   birthA: EMPTY_BIRTH,
   birthB: EMPTY_BIRTH,
+  backgroundPhotos: [],
+  timeline: [],
 };
+
+const MAX_BACKGROUND_PHOTOS = 3;
+const MAX_TIMELINE_ENTRIES = 5;
 
 function CreateWizardInner() {
   const searchParams = useSearchParams();
@@ -66,6 +74,8 @@ function CreateWizardInner() {
   const [synastry, setSynastry] = useState<SynastryResult | null>(null);
   const [synastryStatus, setSynastryStatus] = useState<"idle" | "loading" | "error">("idle");
   const [synastryError, setSynastryError] = useState<string | null>(null);
+  const [bgUploadStatus, setBgUploadStatus] = useState<string | null>(null);
+  const [timelineUploadStatus, setTimelineUploadStatus] = useState<string | null>(null);
 
   function update<K extends keyof Draft>(key: K, value: Draft[K]) {
     setDraft((d) => ({ ...d, [key]: value }));
@@ -87,6 +97,49 @@ function CreateWizardInner() {
     } catch {
       setPhotoStatus("No se pudo leer esa imagen, probá con otra.");
     }
+  }
+
+  async function handleAddBackgroundPhoto(file: File) {
+    setBgUploadStatus("Subiendo…");
+    try {
+      const url = await uploadPhoto(file);
+      update("backgroundPhotos", [...draft.backgroundPhotos, url]);
+      setBgUploadStatus(null);
+    } catch (err) {
+      setBgUploadStatus(err instanceof Error ? err.message : "No se pudo subir la imagen.");
+    }
+  }
+
+  function removeBackgroundPhoto(index: number) {
+    update(
+      "backgroundPhotos",
+      draft.backgroundPhotos.filter((_, i) => i !== index),
+    );
+  }
+
+  async function handleAddTimelinePhoto(file: File) {
+    setTimelineUploadStatus("Subiendo…");
+    try {
+      const url = await uploadPhoto(file);
+      update("timeline", [...draft.timeline, { url, caption: "", date: "" }]);
+      setTimelineUploadStatus(null);
+    } catch (err) {
+      setTimelineUploadStatus(err instanceof Error ? err.message : "No se pudo subir la imagen.");
+    }
+  }
+
+  function updateTimelineEntry(index: number, patch: Partial<TimelineEntry>) {
+    update(
+      "timeline",
+      draft.timeline.map((entry, i) => (i === index ? { ...entry, ...patch } : entry)),
+    );
+  }
+
+  function removeTimelineEntry(index: number) {
+    update(
+      "timeline",
+      draft.timeline.filter((_, i) => i !== index),
+    );
   }
 
   async function generateSynastry() {
@@ -129,6 +182,9 @@ function CreateWizardInner() {
         ? { unlockDate: draft.futureLetterDate, message: draft.futureLetterMessage }
         : undefined,
       synastry: draft.plan === "premium" && synastry ? synastry : undefined,
+      backgroundPhotos: draft.backgroundPhotos.length > 0 ? draft.backgroundPhotos : undefined,
+      timeline:
+        draft.plan === "premium" && draft.timeline.length > 0 ? draft.timeline : undefined,
     };
     const b64 = encodePayload(payload);
     const link = `${window.location.origin}/r/${b64}`;
@@ -147,6 +203,8 @@ function CreateWizardInner() {
     setSynastry(null);
     setSynastryStatus("idle");
     setSynastryError(null);
+    setBgUploadStatus(null);
+    setTimelineUploadStatus(null);
   }
 
   if (published) {
@@ -268,11 +326,10 @@ function CreateWizardInner() {
                 active={draft.plan === "free"}
                 title="Básico"
                 price={`${PLAN_PRICING.free.ars} ARS · ≈${PLAN_PRICING.free.usd} (demo)`}
-                features={["3 temas visuales", "Contador y mensaje", "Con marca de agua"]}
+                features={["3 temas visuales", "Contador y mensaje", "Canción", "Fondo con fotos pasando", "Con marca de agua"]}
                 onSelect={() => {
                   update("plan", "free");
                   update("photo", "");
-                  update("song", "");
                   if (getTheme(draft.theme).premium) update("theme", "romantico");
                 }}
                 variant="ghost"
@@ -281,7 +338,7 @@ function CreateWizardInner() {
                 active={draft.plan === "premium"}
                 title="Premium ✦"
                 price={`${PLAN_PRICING.premium.ars} ARS · ≈${PLAN_PRICING.premium.usd} (demo)`}
-                features={["Los 5 temas", "Foto + canción", "Constelación + estadísticas", "Cápsula del tiempo", "Sinastría con IA", "Sin marca de agua"]}
+                features={["Los 5 temas", "Foto destacada", "Cronología de fotos", "Constelación + estadísticas", "Cápsula del tiempo", "Sinastría con IA", "Sin marca de agua"]}
                 onSelect={() => update("plan", "premium")}
                 variant="gold"
               />
@@ -295,20 +352,18 @@ function CreateWizardInner() {
             <StepLabel n={5} />
             <h2 className="text-[25px]">Una canción y una foto</h2>
             <p className="mt-2 text-[14px] text-text-soft">
-              Ambas son opcionales y quedan disponibles en el plan Premium. La foto se guarda
-              dentro del link (no hay servidor de por medio), así que la comprimimos
-              automáticamente.
+              La canción está incluida en los dos planes. La foto destacada es exclusiva de
+              Premium — se guarda dentro del link, así que la comprimimos automáticamente.
             </p>
-            <Field label={PLAN_FEATURES[draft.plan].song ? "Link de YouTube" : "Link de YouTube — Premium"}>
+            <Field label="Link de YouTube">
               <Input
                 type="url"
-                disabled={!PLAN_FEATURES[draft.plan].song}
                 value={draft.song}
                 onChange={(e) => update("song", e.target.value)}
                 placeholder="https://youtube.com/watch?v=..."
               />
             </Field>
-            <Field label={PLAN_FEATURES[draft.plan].photo ? "Foto" : "Foto — Premium"}>
+            <Field label={PLAN_FEATURES[draft.plan].photo ? "Foto destacada" : "Foto destacada — Premium"}>
               {draft.photo ? (
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -336,6 +391,98 @@ function CreateWizardInner() {
                 💡 El código QR puede volverse muy denso con foto incluida y no escanear bien en
                 algunos celulares — si pasa, compartí el link directo por WhatsApp en vez del QR.
               </p>
+            )}
+
+            <div className="mt-7 border-t border-line pt-6">
+              <h3 className="text-[16px] text-text">Fondo con fotos pasando</h3>
+              <p className="mt-1.5 text-[13px] text-text-soft">
+                Hasta {MAX_BACKGROUND_PHOTOS} fotos que van a ir rotando de fondo, detrás de la
+                tarjeta. Se suben a un storage aparte, así que no afectan el tamaño del QR.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2.5">
+                {draft.backgroundPhotos.map((url, i) => (
+                  <div key={url} className="relative">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="" className="w-16 h-16 object-cover rounded-[10px]" />
+                    <button
+                      type="button"
+                      onClick={() => removeBackgroundPhoto(i)}
+                      className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-ground border border-line-strong text-[11px] text-text-soft"
+                      aria-label="Quitar foto"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+                {draft.backgroundPhotos.length < MAX_BACKGROUND_PHOTOS && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleAddBackgroundPhoto(file);
+                    }}
+                    className="text-[13px] text-text-soft file:mr-3 file:rounded-full file:border-0 file:bg-surface-2 file:px-4 file:py-2 file:text-[13px] file:text-text"
+                  />
+                )}
+              </div>
+              {bgUploadStatus && <p className="mt-2 text-[13px] text-text-soft">{bgUploadStatus}</p>}
+            </div>
+
+            {draft.plan === "premium" && (
+              <div className="mt-7 border-t border-line pt-6">
+                <h3 className="text-[16px] text-text">✦ Cronología</h3>
+                <p className="mt-1.5 text-[13px] text-text-soft">
+                  Hasta {MAX_TIMELINE_ENTRIES} momentos, cada uno con foto, fecha y un texto
+                  corto — para contar la historia paso a paso, no solo con un mensaje.
+                </p>
+                <div className="mt-3 flex flex-col gap-3">
+                  {draft.timeline.map((entry, i) => (
+                    <div key={entry.url} className="flex gap-3 rounded-[10px] border border-line-strong p-2.5">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={entry.url} alt="" className="w-14 h-14 object-cover rounded-[8px] shrink-0" />
+                      <div className="flex-1 flex flex-col gap-1.5">
+                        <Input
+                          type="text"
+                          value={entry.date ?? ""}
+                          onChange={(e) => updateTimelineEntry(i, { date: e.target.value })}
+                          placeholder="Fecha (opcional)"
+                          className="text-[12.5px] py-1.5"
+                        />
+                        <Input
+                          type="text"
+                          value={entry.caption}
+                          onChange={(e) => updateTimelineEntry(i, { caption: e.target.value })}
+                          placeholder="¿Qué pasó acá?"
+                          className="text-[12.5px] py-1.5"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeTimelineEntry(i)}
+                        className="self-start text-[11px] text-text-faint"
+                        aria-label="Quitar momento"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                {draft.timeline.length < MAX_TIMELINE_ENTRIES && (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleAddTimelinePhoto(file);
+                    }}
+                    className="mt-3 text-[13px] text-text-soft file:mr-3 file:rounded-full file:border-0 file:bg-surface-2 file:px-4 file:py-2 file:text-[13px] file:text-text"
+                  />
+                )}
+                {timelineUploadStatus && (
+                  <p className="mt-2 text-[13px] text-text-soft">{timelineUploadStatus}</p>
+                )}
+              </div>
             )}
 
             {draft.plan === "premium" && (

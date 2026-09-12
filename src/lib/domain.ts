@@ -122,10 +122,10 @@ export type PlanKey = "free" | "premium";
 
 export const PLAN_FEATURES: Record<
   PlanKey,
-  { photo: boolean; song: boolean; watermark: boolean; label: string }
+  { photo: boolean; song: boolean; watermark: boolean; backgroundPhotos: boolean; timeline: boolean; label: string }
 > = {
-  free: { photo: false, song: false, watermark: true, label: "Básico" },
-  premium: { photo: true, song: true, watermark: false, label: "Premium" },
+  free: { photo: false, song: true, watermark: true, backgroundPhotos: true, timeline: false, label: "Básico" },
+  premium: { photo: true, song: true, watermark: false, backgroundPhotos: true, timeline: true, label: "Premium" },
 };
 
 export const PLAN_PRICING: Record<
@@ -151,7 +151,13 @@ export type GiftPagePayload = {
   futureLetter?: { unlockDate: string; message: string };
   /** Sinastría — Premium: generada una sola vez (carta natal real + IA) y cacheada acá. */
   synastry?: SynastryResult;
+  /** Fondo animado — Básico y Premium: 2-3 fotos (URLs de Vercel Blob) rotando detrás de la tarjeta. */
+  backgroundPhotos?: string[];
+  /** Cronología — Premium: una línea de tiempo de 3-5 momentos con foto, texto y fecha opcional. */
+  timeline?: TimelineEntry[];
 };
+
+export type TimelineEntry = { url: string; caption: string; date?: string };
 
 export type SynastryResult = {
   text: string;
