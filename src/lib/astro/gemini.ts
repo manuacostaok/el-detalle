@@ -13,11 +13,7 @@ export async function generateWithGemini(prompt: string): Promise<string> {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.9,
-          maxOutputTokens: 4096,
-          thinkingConfig: { thinkingBudget: 0 },
-        },
+        generationConfig: { temperature: 0.9, maxOutputTokens: 4096 },
       }),
     },
   );
