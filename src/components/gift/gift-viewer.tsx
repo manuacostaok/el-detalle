@@ -18,18 +18,17 @@ export function GiftViewer({ payload }: { payload: GiftPagePayload }) {
   const style = GIFT_THEME_STYLES[payload.theme];
   const occasion = getOccasion(payload.occasion);
   const isPremium = payload.plan === "premium";
+  const hasBackgroundPhotos = !!payload.backgroundPhotos && payload.backgroundPhotos.length > 0;
 
   return (
     <div
       className="relative min-h-screen overflow-x-hidden px-5 py-12"
-      style={{ background: style.background }}
+      style={hasBackgroundPhotos ? undefined : { background: style.background }}
     >
-      {payload.backgroundPhotos && payload.backgroundPhotos.length > 0 && (
-        <BackgroundPhotoCarousel photos={payload.backgroundPhotos} />
-      )}
+      {hasBackgroundPhotos && <BackgroundPhotoCarousel photos={payload.backgroundPhotos!} />}
       <RevealOverlay />
       <FloatEmoji emoji={occasion.emoji} />
-      <div className="relative z-[1] mx-auto flex w-full max-w-[460px] flex-col gap-6">
+      <div className="relative z-10 mx-auto flex w-full max-w-[460px] flex-col gap-6">
         <GiftCard payload={payload} live />
         {isPremium && (
           <>

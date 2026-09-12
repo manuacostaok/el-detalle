@@ -17,7 +17,7 @@ export function BackgroundPhotoCarousel({ photos }: { photos: string[] }) {
   if (photos.length === 0) return null;
 
   return (
-    <div className="fixed inset-0 -z-10" aria-hidden="true">
+    <div className="fixed inset-0 z-0" aria-hidden="true">
       {photos.map((url, i) => (
         // eslint-disable-next-line @next/next/no-img-element
         <img
