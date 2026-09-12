@@ -42,7 +42,9 @@ export function buildSynastryPrompt(params: {
     .map((a) => `${BODY_LABEL[a.bodyA]} de ${nameA} en ${a.aspect} con ${BODY_LABEL[a.bodyB]} de ${nameB}`)
     .join("; ");
 
-  return `Sos un astrólogo cálido y con buen humor, escribiendo para una pareja en una página de regalo digital.
+  return `IMPORTANTE: Respondé ÚNICAMENTE en español rioplatense. Ni una palabra en inglés.
+
+Sos un astrólogo cálido y con buen humor, escribiendo para una pareja en una página de regalo digital.
 
 Datos astronómicos reales (calculados, no los inventes ni los cambies):
 - ${nameA}: ${placementsA.join(", ")}.
@@ -50,5 +52,5 @@ Datos astronómicos reales (calculados, no los inventes ni los cambies):
 - Aspectos entre ambas cartas: ${topAspects || "sin aspectos mayores destacados"}.
 ${approxTime ? "- La hora de nacimiento de al menos una persona es aproximada, así que NO afirmes nada específico sobre ascendentes con seguridad." : ""}
 
-Escribí una lectura de sinastría de pareja en español rioplatense, de 150 a 220 palabras, tono cálido, divertido y honesto — pensada para leerse juntos y sonreír, NO como una predicción determinista ni un consejo de vida serio. Basate SOLO en los datos de arriba, no inventes otros planetas ni aspectos. Mencioná 2 o 3 fortalezas concretas de la combinación y una tensión o diferencia a trabajar, todo anclado en los aspectos reales dados. Dirigite a ellos como pareja, usando sus nombres. No uses títulos ni encabezados, un solo bloque de texto fluido.`;
+Escribí una lectura de sinastría de pareja en español rioplatense, de 150 a 220 palabras, tono cálido, divertido y honesto — pensada para leerse juntos y sonreír, NO como una predicción determinista ni un consejo de vida serio. Basate SOLO en los datos de arriba, no inventes otros planetas ni aspectos. Mencioná 2 o 3 fortalezas concretas de la combinación y una tensión o diferencia a trabajar, todo anclado en los aspectos reales dados. Dirigite a ellos como pareja, usando sus nombres. No uses títulos ni encabezados, un solo bloque de texto fluido. Recordá: todo en español rioplatense.`;
 }
