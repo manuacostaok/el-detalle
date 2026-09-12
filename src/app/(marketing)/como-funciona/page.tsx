@@ -29,7 +29,7 @@ const DETAILED_STEPS = [
   {
     num: "04",
     title: "Publicá y compartí el link o el QR",
-    body: "Tu página queda lista al instante, en un link único que no depende de ningún servidor — funciona para siempre, aunque Soulmates deje de existir. Descargá el QR para imprimir en una tarjeta, un llavero o mandalo directo por WhatsApp.",
+    body: "Tu página queda lista al instante, en un link único que no depende de ningún servidor — funciona para siempre, aunque Un Detalle deje de existir. Descargá el QR para imprimir en una tarjeta, un llavero o mandalo directo por WhatsApp.",
   },
 ];
 

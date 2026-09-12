@@ -22,7 +22,7 @@ export function Navbar() {
           <span className="block w-[25px] h-[25px] shrink-0">
             <HeartMark />
           </span>
-          Soulmates
+          Un Detalle
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-[14px] text-text-soft">
           {LINKS.map((link) => (

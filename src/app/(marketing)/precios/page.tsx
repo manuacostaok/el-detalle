@@ -21,7 +21,7 @@ const FAQ_PRICING = [
   },
   {
     q: "¿Qué pasa si la página deja de existir?",
-    a: "No depende de que Soulmates siga activo: todos los datos de tu página viven codificados en el link mismo, así que sigue funcionando aunque el sitio original cambie.",
+    a: "No depende de que Un Detalle siga activo: todos los datos de tu página viven codificados en el link mismo, así que sigue funcionando aunque el sitio original cambie.",
   },
 ];
 
@@ -54,7 +54,7 @@ export default function PreciosPage() {
                 <li>✓ Una canción</li>
                 <li>✓ Fondo con hasta 3 fotos pasando</li>
                 <li>✓ Link y QR para compartir</li>
-                <li>✓ Marca de agua «Hecho con Soulmates»</li>
+                <li>✓ Marca de agua «Hecho con Un Detalle»</li>
               </ul>
               <Button href="/crear?plan=free" variant="ghost" block>
                 Crear con Básico

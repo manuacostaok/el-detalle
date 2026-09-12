@@ -17,7 +17,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="block w-5 h-5 shrink-0">
               <HeartMark />
             </span>
-            Soulmates <span className="font-mono text-[11px] text-text-faint">/admin</span>
+            Un Detalle <span className="font-mono text-[11px] text-text-faint">/admin</span>
           </Link>
           <nav className="flex items-center gap-5 sm:gap-6 text-[13.5px] text-text-soft">
             {NAV.map((item) => (

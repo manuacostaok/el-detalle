@@ -34,7 +34,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <span className="block w-[22px] h-[22px] shrink-0">
               <HeartMark />
             </span>
-            Soulmates
+            Un Detalle
           </Link>
           <div className="flex flex-1 items-center justify-between gap-4 sm:flex-none">
             <nav className="flex items-center gap-5 text-[13.5px] sm:text-[14px] text-text-soft">

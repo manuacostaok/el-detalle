@@ -31,11 +31,11 @@ export function Footer() {
             <span className="block w-[22px] h-[22px] shrink-0">
               <HeartMark />
             </span>
-            Soulmates
+            Un Detalle
           </div>
           <p className="mt-4 max-w-[32ch] text-[13.5px] text-text-faint">
-            Páginas de regalo digital con contador en vivo, para pareja, amigos, familia o
-            mascota. Sin apps, sin cuentas para verla.
+            El gesto de amor que se regala con un link — contador en vivo, mensaje y hasta
+            las estrellas de los dos. Sin apps, sin cuentas para verla.
           </p>
         </div>
         {COLUMNS.map((col) => (
@@ -59,7 +59,7 @@ export function Footer() {
         ))}
       </Container>
       <Container className="pb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-[12.5px] text-text-faint">
-        <span>© {new Date().getFullYear()} Soulmates — páginas para regalar.</span>
+        <span>© {new Date().getFullYear()} Un Detalle — gestos de amor para regalar.</span>
         <span>Hecho en Argentina 💞</span>
       </Container>
     </footer>

@@ -12,7 +12,7 @@ export async function geocodePlace(place: string): Promise<GeocodeResult | null>
 
   const res = await fetch(url.toString(), {
     headers: {
-      "User-Agent": "Soulmates-App/1.0 (contacto: soporte@soulmates.app)",
+      "User-Agent": "UnDetalle-App/1.0 (contacto: soporte@undetalle.app)",
       "Accept-Language": "es",
     },
   });

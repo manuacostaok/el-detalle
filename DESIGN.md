@@ -1,6 +1,10 @@
-# Soulmates — Design & Product Source of Truth
+# Un Detalle — Design & Product Source of Truth
 
-## 0. Qué es Soulmates (auditoría del material original)
+> Renombrado de "Soulmates" a "Un Detalle" para vender lo que el producto realmente es — un
+> gesto/regalo romántico, no una app de citas ni "solo un mensaje". El resto de este
+> documento conserva "Soulmates" donde describe el material original tal cual llegó.
+
+## 0. Qué es Un Detalle (auditoría del material original, entonces llamado "Soulmates")
 
 El zip entregado (`reference/soulmates-site/index.html`) **no es una app de citas**. Es un
 producto ya validado conceptualmente: un generador de **páginas de regalo digital** con

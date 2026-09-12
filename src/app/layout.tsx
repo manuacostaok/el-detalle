@@ -21,19 +21,19 @@ const plexMono = IBM_Plex_Mono({
   weight: ["500", "600"],
 });
 
-const siteUrl = "https://soulmates.app";
+const siteUrl = "https://undetalle.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Soulmates — páginas de regalo con contador en vivo",
-    template: "%s · Soulmates",
+    default: "Un Detalle — el gesto de amor que se regala con un link",
+    template: "%s · Un Detalle",
   },
   description:
-    "Creá en minutos una página de regalo con contador en vivo, mensaje y QR — para pareja, amigos, familia o mascota. Sin apps, sin cuentas para verla.",
+    "Un regalo digital de verdad: contador en vivo, tu mensaje y hasta las estrellas de los dos, envuelto en un link o un QR. Para pareja, amigos, familia o mascota. Sin apps, sin cuentas para verla.",
   openGraph: {
-    title: "Soulmates",
-    description: "Una página con su historia, lista para regalar — con QR incluido.",
+    title: "Un Detalle",
+    description: "El gesto que se abre con un clic — con QR para regalar de verdad.",
     type: "website",
     locale: "es_AR",
     url: siteUrl,

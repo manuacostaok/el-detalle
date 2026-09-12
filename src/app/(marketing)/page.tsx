@@ -38,28 +38,39 @@ export default function LandingPage() {
     <>
       <Container className="grid grid-cols-1 lg:grid-cols-[1.05fr_.95fr] gap-11 lg:gap-14 items-center py-14 lg:py-20">
         <div>
-          <Eyebrow>Regalos digitales · sin apps, sin cuentas</Eyebrow>
+          <Eyebrow>Gestos de amor digitales · sin apps, sin cuentas</Eyebrow>
           <h1 className="mt-3 text-[clamp(34px,5vw,54px)] leading-[1.05] tracking-[-0.01em]">
-            Una página <em className="font-medium italic text-gold-soft">solo para ella</em>,
-            o para él, o para quien quieras.
+            Esto no es un mensaje.
+            <br />
+            <em className="font-medium italic text-gold-soft">Es un detalle.</em>
           </h1>
           <p className="mt-[18px] max-w-[46ch] text-[17px] text-text-soft">
-            Armá en minutos una página con su nombre, tu mensaje y el tiempo que llevan
-            juntos — para parejas, amigos, familia o hasta la mascota. Se comparte con un
-            link o un código QR para imprimir.
+            Armá en minutos un regalo digital de verdad: su nombre, un contador en vivo del
+            tiempo que llevan juntos, y un ritual para abrir tu mensaje — para pareja, amigos,
+            familia o hasta la mascota. Se entrega con un link o un código QR para imprimir.
           </p>
           <div className="mt-[30px] flex flex-wrap items-center gap-3.5">
-            <Button href="/crear">Crear mi página</Button>
+            <Button href="/crear">Crear mi detalle</Button>
             <Button href="/precios" variant="link">
               Ver precios ↓
             </Button>
           </div>
           <div className="mt-3.5 font-mono text-[13px] text-text-faint">
-            ✓ Sin registrarte &nbsp; ✓ Lista en 5 minutos &nbsp; ✓ El link es para siempre
+            ✓ Sin registrarte &nbsp; ✓ Listo en 5 minutos &nbsp; ✓ El link es para siempre
           </div>
         </div>
         <HeroPreviewCard />
       </Container>
+
+      <section className="border-t border-line py-16 sm:py-20">
+        <Container>
+          <SectionHeading
+            eyebrow="Por qué esto y no un mensaje"
+            title="Un mensaje se hunde entre cien más. Un detalle, no."
+            description="Le escribís algo lindo por WhatsApp y a las dos horas ya está enterrado bajo memes y notas de voz. Esto es otra cosa: un momento propio, con su fecha, su contador y su propio ritual para abrirlo — para volver a visitarlo las veces que quiera, no solo una vez."
+          />
+        </Container>
+      </section>
 
       <section className="border-t border-line py-16 sm:py-20" id="como-funciona">
         <Container>
@@ -68,7 +79,7 @@ export default function LandingPage() {
             title="Tres pasos, ningún formulario eterno."
             description={
               <>
-                El detalle completo está en{" "}
+                Todo el paso a paso está en{" "}
                 <Link href="/como-funciona" className="underline underline-offset-4 hover:text-text">
                   cómo funciona
                 </Link>
@@ -119,7 +130,7 @@ export default function LandingPage() {
                 <tr>
                   <th className="text-left border-b border-line py-3.5 px-0" />
                   <th className="text-left border-b border-line py-3.5 px-4 font-mono text-[12px] uppercase tracking-[0.06em] text-text-faint font-semibold">
-                    Soulmates
+                    Un Detalle
                   </th>
                   <th className="text-left border-b border-line py-3.5 px-4 font-mono text-[12px] uppercase tracking-[0.06em] text-text-faint font-semibold">
                     La mayoría de las otras
@@ -163,11 +174,11 @@ export default function LandingPage() {
       <section className="border-t border-line py-16 sm:py-24">
         <Container className="flex flex-col items-center text-center gap-6">
           <h2 className="text-[clamp(28px,4vw,42px)] max-w-[600px]">
-            La próxima persona a la que quieras decirle algo,
-            <em className="font-medium italic text-gold-soft"> dejala con una página. </em>
+            La próxima vez que quieras decirle algo a alguien, no le mandes un mensaje más.
+            <em className="font-medium italic text-gold-soft"> Dejale un detalle. </em>
           </h2>
           <Button href="/crear" size="md">
-            Crear mi página ahora
+            Crear mi detalle ahora
           </Button>
         </Container>
       </section>

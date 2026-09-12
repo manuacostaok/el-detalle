@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <span className="block w-6 h-6 shrink-0">
           <HeartMark />
         </span>
-        Soulmates
+        Un Detalle
       </Link>
       <div className="mt-10 w-full max-w-[400px]">{children}</div>
     </div>
