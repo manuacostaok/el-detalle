@@ -287,10 +287,13 @@ function CreateWizardInner() {
                 <Input value={draft.to} onChange={(e) => update("to", e.target.value)} placeholder="Su nombre" />
               </Field>
             </div>
-            <Field label={occasion.counterLabel}>
+            <Field
+              label={occasion.counterLabel}
+              error={!draft.date ? "Sin esto, el contador arranca en cero — es lo primero que va a ver." : undefined}
+            >
               <Input type="date" value={draft.date} onChange={(e) => update("date", e.target.value)} />
             </Field>
-            <Nav onBack={prev} onNext={next} />
+            <Nav onBack={prev} onNext={next} disabled={!draft.date} />
           </>
         )}
 
@@ -707,11 +710,13 @@ function Nav({
   onNext,
   onFinish,
   nextLabel,
+  disabled,
 }: {
   onBack?: () => void;
   onNext?: () => void;
   onFinish?: () => void;
   nextLabel?: string;
+  disabled?: boolean;
 }) {
   return (
     <div className="flex justify-between mt-8">
@@ -722,7 +727,9 @@ function Nav({
       ) : (
         <span />
       )}
-      <Button onClick={onFinish ?? onNext}>{nextLabel ?? "Continuar →"}</Button>
+      <Button onClick={onFinish ?? onNext} disabled={disabled}>
+        {nextLabel ?? "Continuar →"}
+      </Button>
     </div>
   );
 }

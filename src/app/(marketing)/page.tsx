@@ -4,6 +4,7 @@ import { Container, Eyebrow, SectionHeading } from "@/components/ui/container";
 import { HeroPreviewCard } from "@/components/marketing/hero-preview-card";
 import { PremiumDemoShowcase } from "@/components/marketing/premium-demo-showcase";
 import { OccasionThemeShowcase } from "@/components/marketing/occasion-theme-showcase";
+import { HomeIntro } from "@/components/marketing/home-intro";
 import { RevealSection } from "@/components/motion/reveal-section";
 import { OCCASIONS, THEMES } from "@/lib/domain";
 
@@ -37,6 +38,7 @@ const COMPARISON = [
 export default function LandingPage() {
   return (
     <>
+      <HomeIntro />
       <Container className="grid grid-cols-1 lg:grid-cols-[1.05fr_.95fr] gap-11 lg:gap-14 items-center py-14 lg:py-20">
         <div>
           <Eyebrow>Gestos de amor digitales · sin apps, sin cuentas</Eyebrow>

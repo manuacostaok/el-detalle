@@ -9,7 +9,22 @@ import { SealMark } from "@/components/ui/seal-mark";
  * romper para entrar. No es un fade a negro — la cámara entra en la carta y el
  * contenido de abajo (ya montado, solo tapado) queda revelado en continuidad.
  */
-export function EnvelopeReveal({ recipientName }: { recipientName?: string }) {
+type EnvelopeRevealProps = {
+  recipientName?: string;
+  eyebrow?: string;
+  subtitle?: string;
+  /** Si se pasa, el sello se abre solo después de este delay (ms) en vez de esperar un clic. */
+  autoOpenDelay?: number;
+  onDone?: () => void;
+};
+
+export function EnvelopeReveal({
+  recipientName,
+  eyebrow = "Tenés un detalle",
+  subtitle,
+  autoOpenDelay,
+  onDone,
+}: EnvelopeRevealProps) {
   const [skip, setSkip] = useState(false);
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -33,7 +48,10 @@ export function EnvelopeReveal({ recipientName }: { recipientName?: string }) {
     setOpening(true);
 
     const tl = createTimeline({
-      onComplete: () => setHidden(true),
+      onComplete: () => {
+        setHidden(true);
+        onDone?.();
+      },
     });
 
     if (hintRef.current) tl.add(hintRef.current, { opacity: 0, duration: 200 }, 0);
@@ -62,6 +80,13 @@ export function EnvelopeReveal({ recipientName }: { recipientName?: string }) {
   }
 
   useEffect(() => {
+    if (skip || autoOpenDelay == null) return;
+    const id = setTimeout(() => handleOpen(), autoOpenDelay);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- handleOpen only needs to be (re)scheduled when skip/autoOpenDelay change; it's guarded internally against double-firing.
+  }, [skip, autoOpenDelay]);
+
+  useEffect(() => {
     if (skip || hidden) return;
     if (!sealRef.current) return;
     const pulse = animate(sealRef.current, {
@@ -83,10 +108,12 @@ export function EnvelopeReveal({ recipientName }: { recipientName?: string }) {
     >
       <div className="text-center px-6">
         <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-gold-soft/80">
-          Tenés un detalle
+          {eyebrow}
         </div>
-        {recipientName && (
-          <p className="mt-2 font-serif italic text-[19px] text-text/90">para {recipientName}</p>
+        {(subtitle || recipientName) && (
+          <p className="mt-2 font-serif italic text-[19px] text-text/90">
+            {subtitle ?? `para ${recipientName}`}
+          </p>
         )}
       </div>
 
@@ -126,9 +153,11 @@ export function EnvelopeReveal({ recipientName }: { recipientName?: string }) {
         </div>
       </div>
 
-      <p ref={hintRef} className="font-mono text-[12px] text-text-faint">
-        Tocá el sello para abrirlo
-      </p>
+      {autoOpenDelay == null && (
+        <p ref={hintRef} className="font-mono text-[12px] text-text-faint">
+          Tocá el sello para abrirlo
+        </p>
+      )}
     </div>
   );
 }

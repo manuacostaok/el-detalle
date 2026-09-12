@@ -260,3 +260,29 @@ brief original:
   instalación a pantalla de inicio que lo justifique hoy.
 - Sitemap.xml — no hay suficientes rutas públicas indexables más allá de las ya
   existentes para que aporte valor todavía.
+
+## 13. El sitio de marketing como un detalle: cielo nocturno + sobre de entrada
+
+El fondo negro plano original no vendía nada — el pedido explícito fue "más aura", que
+el sitio entero se sienta como un producto para regalar, no una landing genérica.
+
+**`NightSky`** (`src/components/marketing/night-sky.tsx`) reemplaza el fondo sólido del
+layout de marketing por un cielo nocturno fijo (`position: fixed`, detrás de todo el
+contenido): dos auras suaves en `--color-accent`/`--color-gold` (nunca blobs sin motivo —
+conectan con la paleta de marca), un campo de estrellas titilando (mismo patrón que
+`Constellation`, semilla fija para que SSR y cliente coincidan) y tres constelaciones
+zodiacales dibujadas a mano (`src/lib/zodiac-constellations.ts`: Géminis — dos figuras
+paralelas unidas por el medio, "dos volviéndose uno"; Leo — el signo del corazón/sol;
+Libra — la balanza, equilibrio de a dos). No es decoración porque sí: es la misma idea
+visual de `ConstellationCard` (sinastría Premium) adelantada como atmósfera de todo el
+sitio, antes de que el visitante llegue a esa feature. Todo con CSS puro (`@keyframes
+drift-slow`, `sky-fade-in`, reutiliza `twinkle`) — sin loop de JS corriendo en el fondo,
+respeta `prefers-reduced-motion` vía `motion-safe:`.
+
+**`HomeIntro`** (`src/components/marketing/home-intro.tsx`) generaliza `EnvelopeReveal`
+(nuevas props: `eyebrow`, `subtitle`, `autoOpenDelay`, `onDone`) para reutilizar el mismo
+ritual de apertura del destinatario en la portada del sitio: "Antes de un mensaje, hay un
+detalle." — el producto entero se presenta como un regalo por abrir, no una landing. Se
+abre solo (`autoOpenDelay`, sin requerir click, a diferencia de la página de un
+destinatario real) y se guarda en `sessionStorage` para no repetirse en cada visita
+dentro de la misma sesión de navegador.

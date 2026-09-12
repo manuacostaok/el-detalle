@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getOccasion, timeSince, type GiftPagePayload } from "@/lib/domain";
 import { GIFT_THEME_STYLES } from "@/lib/gift-theme-styles";
 
@@ -18,13 +18,16 @@ export function GiftCard({
   const style = GIFT_THEME_STYLES[payload.theme];
   const occasion = getOccasion(payload.occasion);
   const [opened, setOpened] = useState(compact);
-  const [since, setSince] = useState(() => timeSince(payload.date));
+  const [tick, setTick] = useState(0);
 
   useEffect(() => {
     if (!live) return;
-    const id = setInterval(() => setSince(timeSince(payload.date)), 1000);
+    const id = setInterval(() => setTick((t) => t + 1), 1000);
     return () => clearInterval(id);
-  }, [live, payload.date]);
+  }, [live]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `tick` isn't read, it's only here to force a recompute every second while `live`.
+  const since = useMemo(() => timeSince(payload.date), [payload.date, tick]);
 
   const title = payload.title || occasion.defaultTitle;
   const message = payload.message || occasion.placeholder;
