@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Container, Eyebrow, SectionHeading } from "@/components/ui/container";
 import { HeroPreviewCard } from "@/components/marketing/hero-preview-card";
+import { PremiumDemoShowcase } from "@/components/marketing/premium-demo-showcase";
 import { OccasionThemeShowcase } from "@/components/marketing/occasion-theme-showcase";
 import { RevealSection } from "@/components/motion/reveal-section";
 import { OCCASIONS, THEMES } from "@/lib/domain";
@@ -61,6 +62,32 @@ export default function LandingPage() {
         </div>
         <HeroPreviewCard />
       </Container>
+
+      <section className="border-t border-line py-16 sm:py-24 bg-surface/30">
+        <Container className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 items-center">
+          <div>
+            <Eyebrow>Lo que realmente estás comprando</Eyebrow>
+            <h2 className="mt-3 text-[clamp(26px,3.6vw,38px)] max-w-[520px]">
+              La Edición Especial no es &ldquo;más funciones&rdquo;. Es otra experiencia.
+            </h2>
+            <p className="mt-4 max-w-[46ch] text-[15.5px] text-text-soft">
+              Constelación única de la pareja, su sinastría real interpretada con IA,
+              estadísticas de la relación, una carta que se abre en el futuro — todo esto
+              es contenido real generado por el producto, no una captura de pantalla. Mirá
+              cómo se va turnando acá al lado (o tocá los puntos para saltar).
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Button href="/crear?plan=premium" variant="gold">
+                Preparar la Edición Especial
+              </Button>
+              <Button href="/ejemplos" variant="ghost">
+                Ver ejemplos reales →
+              </Button>
+            </div>
+          </div>
+          <PremiumDemoShowcase />
+        </Container>
+      </section>
 
       <section className="border-t border-line py-16 sm:py-20">
         <Container>
