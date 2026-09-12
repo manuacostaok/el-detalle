@@ -1,10 +1,10 @@
-# Un Detalle — Design & Product Source of Truth
+# El Detalle — Design & Product Source of Truth
 
-> Renombrado de "Soulmates" a "Un Detalle" para vender lo que el producto realmente es — un
+> Renombrado de "Soulmates" a "El Detalle" para vender lo que el producto realmente es — un
 > gesto/regalo romántico, no una app de citas ni "solo un mensaje". El resto de este
 > documento conserva "Soulmates" donde describe el material original tal cual llegó.
 
-## 0. Qué es Un Detalle (auditoría del material original, entonces llamado "Soulmates")
+## 0. Qué es El Detalle (auditoría del material original, entonces llamado "Soulmates")
 
 El zip entregado (`reference/soulmates-site/index.html`) **no es una app de citas**. Es un
 producto ya validado conceptualmente: un generador de **páginas de regalo digital** con
@@ -125,3 +125,130 @@ Ver commits — se trabaja por fases pequeñas:
 6. Admin base.
 7. Pulido de motion (Anime.js) en todo el flujo.
 8. QA responsive + accesibilidad + performance.
+9. Sinastría real (ephemeris + Gemini) + storage real de fotos (Vercel Blob).
+10. Reposicionamiento de marca completo — ver §6 en adelante.
+
+## 6. Brand concept: El Detalle
+
+Repensado a partir de feedback del usuario: la landing vendía "armar una página con un
+mensaje", y el producto es en realidad **preparar un regalo**. La pregunta que gobierna
+cada decisión de acá en más:
+
+> ¿Qué sentiría una persona si recibe este link de alguien que ama?
+> Si la respuesta es "estoy entrando a una web", el diseño está fallando.
+> Si es "me regalaron algo", vamos bien.
+
+**Por qué "El Detalle" y no "Soulmates"**: "Soulmates" suena a app de citas/matching, lo
+que el producto explícitamente NO es (ver §0). "El Detalle" es la frase argentina real
+para un gesto de amor ("tener un detalle con alguien") — describe el producto sin
+necesidad de explicarlo, y el artículo definido ("El", no "Un") lo planta como LA cosa
+que se manda, no una entre varias. Alternativas evaluadas y descartadas: "Latido" (lindo
+pero ya no distingue del corazón que estamos retirando como ícono principal), "Mimo"
+(demasiado infantil para un producto que también sirve para aniversarios/San Valentín
+serios), "Sin Motivo"/"Porque Sí" (más tagline que nombre de marca).
+
+**Lo que la marca transmite**: amor, cuidado, intimidad, sorpresa, elegancia. **Lo que
+evita activamente**: exceso de corazones (retirado como ícono principal — ver §7), rosa
+como paleta por defecto, estética de dating app, estética de SaaS/IA genérica.
+
+## 7. Identidad visual — el sello, no el corazón
+
+El corazón partido (heart-mark.tsx) fue el símbolo original y sigue existiendo en el
+código, pero **ya no es la marca principal**. Se reemplazó por `SealMark`
+(`src/components/ui/seal-mark.tsx`): un sello de lacre circular con el monograma "D" en
+Fraunces itálica. Motivos:
+- Un corazón partido en dos, como ícono constante, es exactamente el patrón "exceso de
+  corazones" que un producto premium debe evitar.
+- Un sello funciona en TODOS los contextos que pide la marca: favicon, marca de agua,
+  ícono de app, y sobre todo — puede **romperse** de verdad como parte de la experiencia
+  de apertura (§8), algo que un corazón partido no puede hacer sin verse infantil.
+
+`SealMark` acepta `cracked` para ocultar el anillo/monograma durante la animación de
+apertura (el movimiento real de las dos mitades lo hace Anime.js directo sobre el DOM,
+no React — ver el comentario en `envelope-reveal.tsx` sobre por qué no conviene animar
+vía props ahí).
+
+Favicon, apple-icon y la imagen de Open Graph se generan con `next/og` (`icon.tsx`,
+`apple-icon.tsx`, `opengraph-image.tsx`), no son archivos estáticos — así siempre
+coinciden con el sello real de la marca. Detalle técnico no obvio: Satori (el motor
+detrás de `next/og`) no tiene acceso a fuentes del sistema ni puede resolver "Georgia" o
+"serif" como los navegadores — hace falta pasarle los bytes reales de la fuente. Google
+Fonts sirve `.woff2` por default, que Satori no puede parsear; pedir la fuente con un
+User-Agent viejo (`src/lib/og-font.ts`) fuerza a Google a devolver `.ttf`, que sí funciona.
+
+## 8. La experiencia de apertura (Gift Reveal)
+
+Es la pieza más importante del producto — la primera pantalla que ve el destinatario NO
+debe parecer una landing. `EnvelopeReveal` (`src/components/gift/envelope-reveal.tsx`)
+implementa:
+
+1. Un sobre de papel (tono `--color-paper`) con una solapa triangular (`clip-path`) y el
+   sello de lacre centrado sobre la solapa. Texto: "Tenés un detalle" + "para {nombre}".
+2. El sello tiene un pulso sutil (`scale` en loop) invitando a tocarlo — nunca autoplay,
+   siempre requiere interacción real (tap/click/teclado vía `<button>`).
+3. Al tocar el sello, una timeline de Anime.js (`createTimeline`) secuencia: el sello se
+   parte en dos mitades que se separan y desvanecen → la solapa gira en 3D (`rotateX`,
+   con `perspective` en el contenedor padre) como si se abriera de verdad → una "carta"
+   sale del sobre (`translateY` + `scale` + `opacity`) → todo el grupo escala levemente y
+   se desvanece, revelando el contenido real de abajo (que ya estaba montado, solo tapado
+   por el overlay) en continuidad — nunca un fade a negro seguido de una página nueva.
+4. `prefers-reduced-motion` salta directo al contenido — la experiencia nunca depende de
+   la animación para ser usable, tal como pide accesibilidad.
+
+Este es el único momento del producto con motion elaborado. El resto del motion (reveals
+de sección con `RevealSection`, hovers) es deliberadamente silencioso — ver el principio
+en §2: "el movimiento debe guiar, explicar, confirmar, emocionar. No decorar."
+
+## 9. Narrativa de la experiencia recibida
+
+`GiftViewer` ya no es un stack sin orden de "cards" — cada sección premium lleva un
+número de capítulo en su eyebrow (`02 · Sus momentos`, `03 · Su universo`, `04 · Lo que
+dicen las estrellas`, `05 · Sus números`, `06 · Lo que todavía no pasó`), en este orden:
+
+```
+GiftCard (portada + su historia, sin número — es la apertura misma)
+  ↓
+02 · Sus momentos          (PhotoTimeline, si hay cronología)
+  ↓
+03 · Su universo           (ConstellationCard, Edición Especial)
+04 · Lo que dicen estrellas (SynastryCard, si se generó sinastría)
+05 · Sus números           (LoveStats, Edición Especial)
+  ↓
+06 · Lo que todavía no pasó (FutureLetter, si hay cápsula del tiempo)
+```
+
+`SynastryCard` separa visualmente "Sus cartas — datos reales" (los signos calculados) de
+"Lo que significa" (el párrafo escrito por Gemini) — nunca deben leerse como la misma
+cosa, uno es cálculo, el otro es interpretación.
+
+## 10. Planes: Clásico / Edición Especial
+
+Se evaluó mantener "Básico/Premium" (genérico SaaS, no vende nada por sí mismo) y
+"Detalle/Detalle Especial" (descartado: el plan base repetiría literalmente el nombre de
+la marca, confuso — como si Apple llamara a su laptop base "Apple"). Se eligió
+**Clásico** / **Edición Especial**: evita colisión con el nombre de marca, sigue una
+convención de producto físico premium (perfumería, moda) en vez de SaaS, y dimensiona
+Premium como algo curado/limitado en vez de solo "más funciones".
+
+## 11. Microcopy — reglas
+
+Evitar lenguaje técnico/administrativo en cualquier texto de interfaz: nunca "Generate",
+"Submit", "Dashboard", "Publish", "Upload asset". En su lugar, lenguaje de estar
+preparando y entregando un regalo: "Sellar mi detalle" (publicar), "Mis detalles" (no
+"mis páginas"), "Preparar el Clásico" / "Preparar la Edición Especial" (elegir plan),
+"Entregar por WhatsApp" (compartir). El mensaje pre-cargado de WhatsApp
+(`share-screen.tsx`) es explícitamente emocional, no un link pelado.
+
+## 12. Qué queda pendiente (no implementado en esta pasada)
+
+Documentado acá para que quede explícito qué NO se tocó todavía, dado el tamaño del
+brief original:
+- Rediseño visual completo del wizard más allá del copy/microcopy (sigue siendo el mismo
+  layout de formulario de antes, con textos y nombres de plan actualizados).
+- Tratamiento editorial completo de fotografía (full-bleed, crops cinematográficos) en
+  `PhotoTimeline` — hoy son thumbnails rectangulares simples, funcionales pero no la
+  pieza "álbum/diario" descripta en el brief.
+- `manifest.json` / PWA — no se agregó porque el producto no tiene un flujo de
+  instalación a pantalla de inicio que lo justifique hoy.
+- Sitemap.xml — no hay suficientes rutas públicas indexables más allá de las ya
+  existentes para que aporte valor todavía.
